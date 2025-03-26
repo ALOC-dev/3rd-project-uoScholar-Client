@@ -1,8 +1,9 @@
 # 3rd-project-uoScholar-Client
 
-## 앱 실행하기(윈도우)
-
+## 앱 실행 가이드
+### Window
 ```sh
+npm install
 npm start
 ```
 
