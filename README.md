@@ -15,3 +15,18 @@ npm run android
 ```
 
 ***npm run start***와 ***npm run android***는 서로 다른 터미널에서 실행되어야 합니다.
+
+### Mac
+```sh
+npm install
+```
+
+```sh
+npm run start
+```
+
+```sh
+npm run ios
+```
+
+***npm run start***와 ***npm run android***는 서로 다른 터미널에서 실행되어야 합니다.
