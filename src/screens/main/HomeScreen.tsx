@@ -8,15 +8,15 @@ import {
     Image,
     TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { sendTextToBackend } from '../../api/Api';
-import IMAGES from '../../assets';
+import IMAGES from '../../assets/index';
+import { ChatBubble } from '../../components';
 
 const HomeScreen = () => {
-
-    const [text, setText] = useState('');
-    const [response, setResponse] = useState('');
+    const [text, setText] = useState(''); // user input
+    const [response, setResponse] = useState(''); // server output
     const navigation = useNavigation();
 
     const handleSubmit = async () => {
@@ -54,6 +54,9 @@ const HomeScreen = () => {
                     onChangeText={setText}
                 />
                 <Button title="전송" onPress={handleSubmit} />
+
+                {/* Chatting Bubble design */}
+                <ChatBubble text={text}/>
             </View>
         </SafeAreaView>
     );
