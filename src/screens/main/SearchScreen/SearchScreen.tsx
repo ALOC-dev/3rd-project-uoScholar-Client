@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import IMAGES from '../../assets';
+import IMAGES from '../../../assets/index';
 
 const SearchScreen = () => {
     const navigation = useNavigation();

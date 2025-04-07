@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { sendTextToBackend } from '../../api/Api';
-import IMAGES from '../../assets/index';
-import { ChatBubble } from '../../components';
+import { sendTextToBackend } from '../../../api/Api';
+import IMAGES from '../../../assets/index';
+import ChatBubble from './ChatBubble';
 
 const HomeScreen = () => {
     const [text, setText] = useState(''); // user input
@@ -24,9 +24,6 @@ const HomeScreen = () => {
             // backend
             const result = await sendTextToBackend(text);
             setResponse(result);
-
-            // frontend
-            <ChatBubble text={text} sender='client'/>
         } catch (error) {
             setResponse('오류가 발생했습니다.');
         }
@@ -60,6 +57,7 @@ const HomeScreen = () => {
                 <Button title="전송" onPress={handleSubmit} />
 
                 {/* Chatting Bubble design */}
+                <ChatBubble text={text} sender='client'/>
             </View>
         </SafeAreaView>
     );
