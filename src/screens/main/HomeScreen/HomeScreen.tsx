@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import {
     View,
-    TextInput,
-    Button,
     Text,
     StyleSheet,
     Image,
@@ -10,24 +8,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { sendTextToBackend } from '../../../api/Api';
+import { RootStackParamList } from '../../../navigation/types';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import IMAGES from '../../../assets/index';
-import ChatBubble from './ChatBubble';
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 const HomeScreen = () => {
-    const [text, setText] = useState(''); // user input
-    const [response, setResponse] = useState(''); // server output
-    const navigation = useNavigation();
-
-    const handleSubmit = async () => {
-        try {
-            // backend
-            const result = await sendTextToBackend(text);
-            setResponse(result);
-        } catch (error) {
-            setResponse('오류가 발생했습니다.');
-        }
-    };
+    const navigation = useNavigation<HomeScreenNavigationProp>();
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -42,22 +30,10 @@ const HomeScreen = () => {
                     >
                         <Image 
                             source={IMAGES.TABICON} 
-                            style={styles.tabBtnImg} 
+                            style={styles.tabBtnImg}
                         />
                     </TouchableOpacity>
                 </View>
-
-                {/* 입력 컴포넌트 */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="텍스트를 입력하세요"
-                    value={text}
-                    onChangeText={setText}
-                />
-                <Button title="전송" onPress={handleSubmit} />
-
-                {/* Chatting Bubble design */}
-                <ChatBubble text={text} sender='client'/>
             </View>
         </SafeAreaView>
     );
@@ -91,13 +67,6 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         resizeMode: 'contain',
-    },
-    input: {
-        flexShrink: 1,
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-        paddingHorizontal: 10,
-        height: 50,
     },
 });
 
