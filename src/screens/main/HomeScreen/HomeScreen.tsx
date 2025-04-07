@@ -5,12 +5,15 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
+    KeyboardAvoidingView,
+    Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../navigation/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import IMAGES from '../../../assets/index';
+import ChatInput from './ChatInput';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -19,22 +22,37 @@ const HomeScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{ flex: 1 }}>
-
-                {/* Header */}
-                <View style={styles.topContainer}>
-                    <Text style={styles.title}>Chat</Text>
-                    <TouchableOpacity
-                        style={styles.tabBtn}
-                        onPress={() => navigation.navigate('Search')}
-                    >
-                        <Image 
-                            source={IMAGES.TABICON} 
-                            style={styles.tabBtnImg}
-                        />
-                    </TouchableOpacity>
-                </View>
+            {/* Header */}
+            <View style={styles.topContainer}>
+                <Text style={styles.title}>Chat</Text>
+                <TouchableOpacity
+                    style={styles.tabBtn}
+                    onPress={() => navigation.navigate('Search')}
+                >
+                    <Image 
+                        source={IMAGES.TABICON} 
+                        style={styles.tabBtnImg}
+                    />
+                </TouchableOpacity>
             </View>
+
+            {/* Chatting Screen */}
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
+                <View style={{ flex: 1 }}>
+                    {/* Chatting Content */}
+                    <View style={styles.chatContentContainer}>
+                        <Text>메롱</Text>
+                    </View>
+
+                    {/* Chatting Input */}
+                    <View style={styles.bottomContainer}>
+                        <ChatInput />
+                    </View>
+                </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 };
@@ -51,6 +69,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderBottomWidth: 1,
         borderBottomColor: "#ddd",
+        backgroundColor: 'lightblue',
     },
     title: {
         fontSize: 20,
@@ -67,6 +86,17 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         resizeMode: 'contain',
+    },
+    chatContentContainer: {
+        flex: 1,
+        backgroundColor: 'skyblue',
+    },
+    bottomContainer: {
+        position: 'absolute',
+        width: '100%',
+        bottom: 0,
+        padding: 10,
+        backgroundColor: '#fff',
     },
 });
 

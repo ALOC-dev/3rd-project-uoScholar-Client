@@ -21,7 +21,7 @@ const SearchScreen = () => {
                 <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
                     <Image source={IMAGES.BACKWARD} style={styles.backBtnImg} />
                 </TouchableOpacity>
-                <Text style={styles.title}>Search</Text>                
+                <Text style={styles.title}>Search</Text>
             </View>
         </SafeAreaView>
     );
