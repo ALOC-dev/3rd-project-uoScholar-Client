@@ -21,8 +21,12 @@ const HomeScreen = () => {
 
     const handleSubmit = async () => {
         try {
+            // backend
             const result = await sendTextToBackend(text);
             setResponse(result);
+
+            // frontend
+            <ChatBubble text={text} sender='client'/>
         } catch (error) {
             setResponse('오류가 발생했습니다.');
         }
@@ -56,7 +60,6 @@ const HomeScreen = () => {
                 <Button title="전송" onPress={handleSubmit} />
 
                 {/* Chatting Bubble design */}
-                <ChatBubble text={text}/>
             </View>
         </SafeAreaView>
     );
@@ -97,11 +100,6 @@ const styles = StyleSheet.create({
         borderColor: '#E0E0E0',
         paddingHorizontal: 10,
         height: 50,
-    }, 
-    response: {
-        marginTop: 20,
-        fontSize: 16,
-        fontWeight: 'bold',
     },
 });
 

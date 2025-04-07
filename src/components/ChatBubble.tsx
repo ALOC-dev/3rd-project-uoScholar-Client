@@ -8,19 +8,15 @@ interface ChatBubbleProps {
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender }) => {
     return (
-        <View style={text.length===0 ? 
-           styles.None :([styles.container, sender === "bot" ? styles.botBubble : styles.clientBubble])}>
+        <View style={[styles.container, sender === "bot" ? styles.botBubble : styles.clientBubble]}>
             <Text style={styles.text}>{text}</Text>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    None: {
-        backgroundColor: "F0F0F0",
-    },
     container: {
-        maxWidth: "70%", //말풍선 최대 너비 (화면 전체 기준 비율)
+        maxWidth: "60%", //말풍선 최대 너비 (화면 전체 기준 비율)
         padding: 10, //말풍선 내부에서 텍스트와 테두리 사이 여백
         borderRadius: 10, 
         marginVertical: 5,
