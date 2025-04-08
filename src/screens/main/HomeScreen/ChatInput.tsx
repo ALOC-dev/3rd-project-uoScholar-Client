@@ -7,17 +7,19 @@ import {
     Image,
 } from "react-native";
 import IMAGES from "../../../assets";
+import { sendTextToBackend } from "../../../api/Api";
 
-const ChatInput = () => {
+const ChatInput = ({ onsend } : { onsend: (message: string) => void}) => {
     const [text, setText] = useState('');
 
     const handleSend = () => {
         if (text === '') return;
+
         console.log('전송:', text);
-
-        
-
+        onsend(text);
         setText('');
+
+        sendTextToBackend(text);
     }
 
     return (
@@ -29,7 +31,7 @@ const ChatInput = () => {
                     value={text}
                     onChangeText={setText}
                 />
-                <TouchableOpacity onPress={handleSend}>
+                <TouchableOpacity onPress={handleSend} disabled={text === ''}>
                     <Image
                         source={
                             text === ''

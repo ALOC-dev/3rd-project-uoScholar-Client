@@ -14,11 +14,19 @@ import { RootStackParamList } from '../../../navigation/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import IMAGES from '../../../assets/index';
 import ChatInput from './ChatInput';
+import ChatContainer from './ChatContainer';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 const HomeScreen = () => {
     const navigation = useNavigation<HomeScreenNavigationProp>();
+
+    const [chatList, setChatList] = useState<string[]>([]);
+
+    const handleSendMessage = (message: string) => {
+        if (message.trim() === '') return;
+        setChatList((prev) => [...prev, message]);
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -44,12 +52,12 @@ const HomeScreen = () => {
                 <View style={{ flex: 1 }}>
                     {/* Chatting Content */}
                     <View style={styles.chatContentContainer}>
-                        <Text>메롱</Text>
+                        <ChatContainer chatList={chatList} />
                     </View>
 
                     {/* Chatting Input */}
                     <View style={styles.bottomContainer}>
-                        <ChatInput />
+                        <ChatInput onsend={handleSendMessage}/>
                     </View>
                 </View>
             </KeyboardAvoidingView>

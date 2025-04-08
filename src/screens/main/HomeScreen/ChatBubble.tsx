@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     clientBubble: {
         alignSelf: "flex-end",
         backgroundColor: "black",
-        marginRight: 10,
     },
     text: {
         color: "white",
