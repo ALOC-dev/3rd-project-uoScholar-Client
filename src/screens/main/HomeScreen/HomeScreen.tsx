@@ -29,7 +29,8 @@ const HomeScreen = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <>
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'lightblue' }}>
             {/* Header */}
             <View style={styles.topContainer}>
                 <Text style={styles.title}>Chat</Text>
@@ -62,6 +63,7 @@ const HomeScreen = () => {
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>
+        </>
     );
 };
 
