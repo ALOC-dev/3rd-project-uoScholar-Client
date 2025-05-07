@@ -18,50 +18,45 @@ import ChatContainer from './ChatContainer';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
+export type ChatMessage = {
+    message: string;
+    sender: 'user' | 'bot';
+};
+
 const HomeScreen = () => {
     const navigation = useNavigation<HomeScreenNavigationProp>();
     const insets = useSafeAreaInsets();
 
-    const [chatList, setChatList] = useState<string[]>([]);
+    const [chatList, setChatList] = useState<ChatMessage[]>([]);
 
-    const handleSendMessage = (message: string) => {
-        if (message.trim() === '') return;
-        setChatList((prev) => [...prev, message]);
+    const handleSendMessage = (newMessage: ChatMessage) => {
+        setChatList(prev => [...prev, newMessage]);
     };
 
     return (
         <View style={styles.root}>
-            {/* Top Safe Area */}
             <SafeAreaView style={styles.safeTopArea} />
 
-            {/* Header */}
             <View style={styles.topContainer}>
                 <Text style={styles.title}>Chat</Text>
                 <TouchableOpacity
                     style={styles.tabBtn}
                     onPress={() => navigation.navigate('Search')}
                 >
-                    <Image 
-                        source={IMAGES.TABICON} 
-                        style={styles.tabBtnImg}
-                    />
+                    <Image source={IMAGES.TABICON} style={styles.tabBtnImg} />
                 </TouchableOpacity>
             </View>
 
-            {/* Chatting Screen */}
             <KeyboardAvoidingView
                 style={styles.keyboardAvoiding}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
                 <View style={styles.chatWrapper}>
-                    {/* Chat Content */}
                     <View style={styles.chatContentContainer}>
                         <ChatContainer chatList={chatList} />
                     </View>
-
-                    {/* Chat Input */}
-                    <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}>
-                        <ChatInput onsend={handleSendMessage}/>
+                    <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}> 
+                        <ChatInput onsend={handleSendMessage} />
                     </View>
                 </View>
             </KeyboardAvoidingView>
@@ -72,10 +67,10 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: 'skyblue',
+        backgroundColor: 'skyblue'
     },
     safeTopArea: {
-        backgroundColor: 'lightblue',
+        backgroundColor: 'lightblue'
     },
     topContainer: {
         flexDirection: 'row',
@@ -86,38 +81,14 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ddd',
         backgroundColor: 'lightblue',
     },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        position: 'absolute',
-        alignItems: 'center',
-    },
-    tabBtn: {
-        position: 'absolute',
-        right: 10,
-        padding: 10,
-    },
-    tabBtnImg: {
-        width: 25,
-        height: 25,
-        resizeMode: 'contain',
-    },
-    keyboardAvoiding: {
-        flex: 1,
-    },
-    chatWrapper: {
-        flex: 1,
-    },
-    chatContentContainer: {
-        flex: 1,
-        backgroundColor: 'skyblue',
-    },
+    title: { fontSize: 20, fontWeight: 'bold', position: 'absolute', alignItems: 'center' },
+    tabBtn: { position: 'absolute', right: 10, padding: 10 },
+    tabBtnImg: { width: 25, height: 25, resizeMode: 'contain' },
+    keyboardAvoiding: { flex: 1 },
+    chatWrapper: { flex: 1 },
+    chatContentContainer: { flex: 1, backgroundColor: 'skyblue' },
     bottomContainer: {
-        position: 'absolute',
-        width: '100%',
-        bottom: 0,
-        padding: 10,
-        backgroundColor: '#f0f0f0',
+        position: 'absolute', width: '100%', bottom: 0, padding: 10, backgroundColor: '#f0f0f0'
     },
 });
 

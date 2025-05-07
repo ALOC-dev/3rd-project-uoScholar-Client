@@ -1,32 +1,22 @@
-import React, { useState } from 'react';
-import {
-    View,
-    FlatList,
-    ScrollView,
-    StyleSheet
-} from 'react-native';
+import React from 'react';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import ChatBubble from './ChatBubble';
-import ChatInput from './ChatInput';
+import { ChatMessage } from './HomeScreen';
 
-const ChatContainer = ({ chatList }: { chatList: string[] }) => {
-
+const ChatContainer = ({ chatList }: { chatList: ChatMessage[] }) => {
     return (
-        <ScrollView
-            contentContainerStyle={styles.chatContainer}
-            showsVerticalScrollIndicator={false}
-            >
-            {chatList.map((message, index) => (
-                <ChatBubble text={message} sender='client' />
-
+        <ScrollView contentContainerStyle={styles.chatContainer} showsVerticalScrollIndicator={false}>
+            {chatList.map((chat, index) => (
+                <ChatBubble key={index} text={chat.message} sender={chat.sender} />
             ))}
         </ScrollView>
     );
 };
-    
+
 const styles = StyleSheet.create({
     chatContainer: {
         paddingTop: 5,
-        paddingBottom: 70,  // ChatInput 높이 만큼 여백 주기
+        paddingBottom: 70,
         paddingHorizontal: 10,
     },
 });
