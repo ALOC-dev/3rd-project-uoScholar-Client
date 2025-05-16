@@ -49,7 +49,7 @@ const HomeScreen = () => {
 
             <KeyboardAvoidingView
                 style={styles.keyboardAvoiding}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                behavior={ Platform.OS === 'ios' ? 'padding' : undefined }
             >
                 <View style={styles.chatWrapper}>
                     <View style={styles.chatContentContainer}>
