@@ -10,17 +10,19 @@ const MainStack = () => {
             <Stack.Screen
                 name="Home"
                 component={HomeScreen}
-                options={{
-                    headerShown: false
-                }}
+                options={{ headerShown: false }}
             />
             <Stack.Screen
                 name="Search"
                 component={SearchScreen}
-                options={{ headerShown: false }}
+                options={{
+                headerShown: false,
+                animation: 'slide_from_right',     // 👈 오른쪽에서 슬라이드
+                presentation: 'transparentModal',              // 👈 모달처럼 덮기
+                }}
             />
         </Stack.Navigator>
     );
-}
+};
 
 export default MainStack;

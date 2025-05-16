@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     KeyboardAvoidingView,
     Platform,
+    Dimensions
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -17,6 +18,9 @@ import ChatInput from './ChatInput';
 import ChatContainer from './ChatContainer';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+
+const { height } = Dimensions.get('window');
+const insets = useSafeAreaInsets();
 
 export type ChatMessage = {
     message: string;
@@ -37,7 +41,7 @@ const HomeScreen = () => {
         <View style={styles.root}>
             <SafeAreaView style={styles.safeTopArea} />
 
-            <View style={styles.topContainer}>
+            <View style={[styles.topContainer, { paddingTop: insets.top }]}>
                 <Text style={styles.title}>Chat</Text>
                 <TouchableOpacity
                     style={styles.tabBtn}
@@ -76,7 +80,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        height: 50,
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
         backgroundColor: 'lightblue',
