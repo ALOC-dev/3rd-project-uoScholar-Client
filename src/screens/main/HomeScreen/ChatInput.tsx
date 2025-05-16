@@ -14,28 +14,27 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
     const [text, setText] = useState('');
 
     const handleSend = async () => {
-        if (text === '') return;
-    
-        const currentText = text;
-        setText('');
-        onsend({ message: currentText, sender: 'user' });
-    
-        let backendResponse = '';
-    
+        let currentText = text.trim(); // 공백 입력 방지
+        if (currentText === '') return;
+        setText(''); // 입력창 초기화
+
+        // 클라이언트 메세지 먼저 전송
+        onsend({ message: currentText, sender: 'client' });
+
         try {
             await sendTextToBackend(currentText);
         } catch (error) {
-            console.error('sendTextToBackend 실패:', error);
-            onsend({ message: '메시지 전송 실패.', sender: 'bot' });
+            console.error('sendTextToBackend 실패:', error.message);
+            onsend({ message: '❌ 메시지 전송 실패: 서버에 도달하지 못했습니다.', sender: 'bot' });
             return;
         }
     
         try {
-            backendResponse = await getTextFromBackend();
+            const backendResponse = await getTextFromBackend();
             onsend({ message: backendResponse, sender: 'bot' });
-        } catch (error) {
-            console.error('getTextFromBackend 실패:', error);
-            onsend({ message: '챗봇 응답 실패. 다시 시도해주세요.', sender: 'bot' });
+        } catch (error: any) {
+            console.error('getTextFromBackend 실패:', error.message);
+            onsend({ message: '⚠️ 챗봇 응답 실패: 잠시 후 다시 시도해주세요.', sender: 'bot' });
         }
     };
 
