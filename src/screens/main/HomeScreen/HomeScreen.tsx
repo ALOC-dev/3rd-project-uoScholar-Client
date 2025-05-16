@@ -20,7 +20,7 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'H
 
 export type ChatMessage = {
     message: string;
-    sender: 'user' | 'bot';
+    sender: 'bot' | 'client';
 };
 
 const HomeScreen = () => {
