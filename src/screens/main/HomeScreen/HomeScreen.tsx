@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     chatContentContainer: {
         flex: 1,
         backgroundColor: 'skyblue',
-        paddingBottom: 20,
+        paddingBottom: 10,
     },
     bottomContainer: {
         position: 'absolute',
