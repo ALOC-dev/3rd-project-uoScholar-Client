@@ -81,14 +81,39 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ddd',
         backgroundColor: 'lightblue',
     },
-    title: { fontSize: 20, fontWeight: 'bold', position: 'absolute', alignItems: 'center' },
-    tabBtn: { position: 'absolute', right: 10, padding: 10 },
-    tabBtnImg: { width: 25, height: 25, resizeMode: 'contain' },
-    keyboardAvoiding: { flex: 1 },
-    chatWrapper: { flex: 1 },
-    chatContentContainer: { flex: 1, backgroundColor: 'skyblue' },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        position: 'absolute',
+        alignItems: 'center'
+    },
+    tabBtn: {
+        position: 'absolute',
+        right: 10,
+        padding: 10
+    },
+    tabBtnImg: {
+        width: 25,
+        height: 25,
+        resizeMode: 'contain'
+    },
+    keyboardAvoiding: {
+        flex: 1
+    },
+    chatWrapper: {
+        flex: 1
+    },
+    chatContentContainer: {
+        flex: 1,
+        backgroundColor: 'skyblue',
+        paddingBottom: 20,
+    },
     bottomContainer: {
-        position: 'absolute', width: '100%', bottom: 0, padding: 10, backgroundColor: '#f0f0f0'
+        position: 'absolute',
+        width: '100%',
+        bottom: 0,
+        padding: 10,
+        backgroundColor: '#f0f0f0',
     },
 });
 
