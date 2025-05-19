@@ -13,9 +13,9 @@ import { useNavigation } from '@react-navigation/native';
 import IMAGES from '../../../assets/index';
 
 const { width } = Dimensions.get('window');
-const insets = useSafeAreaInsets();
 
 const SearchScreen = () => {
+    const insets = useSafeAreaInsets();
     const navigation = useNavigation();
 
     return (
