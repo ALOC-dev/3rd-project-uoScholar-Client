@@ -104,9 +104,10 @@ const styles = StyleSheet.create({
     bottomContainer: {
         position: 'absolute',
         width: '100%',
+        height: 90,
         bottom: 0,
         padding: 10,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#F9FAFB',
     },
 });
 
