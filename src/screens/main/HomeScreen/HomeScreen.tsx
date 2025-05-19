@@ -5,8 +5,6 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
     Dimensions
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,6 +14,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import IMAGES from '../../../assets/index';
 import ChatInput from './ChatInput';
 import ChatContainer from './ChatContainer';
+import COLORS from '../../../constants/colors';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -67,16 +66,14 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: 'lightblue',
+        backgroundColor: COLORS.HEADER_BACKGROUND,
     },
     topContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        borderBottomWidth: 1,
         height: 50,
-        borderBottomColor: '#ddd',
-        backgroundColor: 'lightblue',
+        backgroundColor: COLORS.HEADER_BACKGROUND,
     },
     title: {
         fontSize: 20,
@@ -101,7 +98,7 @@ const styles = StyleSheet.create({
     },
     chatContentContainer: {
         flex: 1,
-        backgroundColor: 'skyblue',
+        backgroundColor: COLORS.MAIN_BACKGROUND,
         paddingBottom: 10,
     },
     bottomContainer: {
@@ -110,7 +107,7 @@ const styles = StyleSheet.create({
         height: 90,
         bottom: 0,
         padding: 10,
-        backgroundColor: '#F9FAFB',
+        backgroundColor: COLORS.FOOTER_BACKGROUND,
     },
 });
 

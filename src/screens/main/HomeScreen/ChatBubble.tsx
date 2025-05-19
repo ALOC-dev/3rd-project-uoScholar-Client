@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from 'react-native';
+import COLORS from "../../../constants/colors";
 
 interface ChatBubbleProps {
     text: string;
@@ -23,14 +24,14 @@ const styles = StyleSheet.create({
     },
     botBubble: {
         alignSelf: "flex-start",
-        backgroundColor: "grey",
+        backgroundColor: COLORS.BOT_BUBBLE_BACKGROUND,
     },
     clientBubble: {
         alignSelf: "flex-end",
-        backgroundColor: "black",
+        backgroundColor: COLORS.CLIENT_BUBBLE_BACKGROUND,
     },
     text: {
-        color: "white",
+        color: COLORS.TEXT_PRIMARY,
         fontSize: 14,
     }
 });
