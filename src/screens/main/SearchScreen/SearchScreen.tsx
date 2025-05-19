@@ -20,10 +20,10 @@ const SearchScreen = () => {
 
     return (
         <View style={styles.overlay}>
+            {/* Header */}
             <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
                 <View style={styles.leftDimmedArea} />
             </TouchableWithoutFeedback>
-
             <View style={[styles.panel, {paddingTop: insets.top}]}>
                 <View style={styles.topContainer}>
                     <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
@@ -32,6 +32,8 @@ const SearchScreen = () => {
                     <Text style={styles.title}>Search</Text>
                 </View>
             </View>
+
+            {/* Main */}
         </View>
     );
 };

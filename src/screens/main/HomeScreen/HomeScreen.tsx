@@ -39,6 +39,7 @@ const HomeScreen = () => {
     return (
         <SafeAreaView style={styles.root}>
             <View>
+                {/* Header */}
                 <View style={styles.topContainer}>
                     <Text style={styles.title}>Chat</Text>
                     <TouchableOpacity
@@ -50,10 +51,12 @@ const HomeScreen = () => {
                 </View>
             </View>
 
+            {/* Main */}
             <View style={styles.chatContentContainer}>
                 <ChatContainer chatList={chatList} />
             </View>
-            
+
+            {/* Footer */}
             <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}>
                 <ChatInput onsend={handleSendMessage} />
             </View>
