@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
+    View,
+    Text,
+    TextInput,
+    FlatList,
+    StyleSheet,
+    TouchableOpacity,
 } from 'react-native';
 
 type Item = {
-  id: string;
-  name: string;
+    id: string;
+    name: string;
 };
 
 const DATA: Item[] = [
-  { id: '1', name: 'Example Chat 1' },
-  { id: '2', name: 'Example Chat 2' },
-  { id: '3', name: 'Example Chat 3' },
-  { id: '4', name: 'Example Chat 4' },
-  { id: '5', name: 'Example Chat 5' },
-  { id: '6', name: 'Example Chat 6' },
-  { id: '7', name: 'Example Chat 7' },
+    { id: '1', name: 'Example Chat 1' },
+    { id: '2', name: 'Example Chat 2' },
+    { id: '3', name: 'Example Chat 3' },
+    { id: '4', name: 'Example Chat 4' },
+    { id: '5', name: 'Example Chat 5' },
+    { id: '6', name: 'Example Chat 6' },
+    { id: '7', name: 'Example Chat 7' },
 ];
 
 const SearchBar = () => {

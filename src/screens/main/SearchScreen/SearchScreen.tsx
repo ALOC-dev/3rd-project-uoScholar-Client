@@ -1,4 +1,3 @@
-
 import React from 'react'; 
 import { 
     View, 
@@ -20,7 +19,7 @@ const { width } = Dimensions.get('window');
 const SearchScreen = () => { 
     const insets = useSafeAreaInsets(); 
     const navigation = useNavigation(); 
- 
+
     return ( 
         <View style={styles.overlay}> 
             <TouchableWithoutFeedback onPress={() => navigation.goBack()}> 
@@ -45,7 +44,7 @@ const SearchScreen = () => {
         </View> 
     ); 
 }; 
- 
+
 const styles = StyleSheet.create({ 
     overlay: { 
         position: 'absolute', 
@@ -99,5 +98,5 @@ const styles = StyleSheet.create({
         resizeMode: 'contain', 
     }, 
 }); 
- 
+
 export default SearchScreen;

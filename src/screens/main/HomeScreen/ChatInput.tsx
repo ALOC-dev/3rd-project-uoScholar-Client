@@ -28,7 +28,7 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
             onsend({ message: '❌ 메시지 전송 실패: 서버에 도달하지 못했습니다.', sender: 'bot' });
             return;
         }
-    
+
         try {
             const backendResponse = await getTextFromBackend();
             onsend({ message: backendResponse, sender: 'bot' });
