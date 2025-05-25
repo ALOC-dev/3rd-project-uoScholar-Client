@@ -1,36 +1,45 @@
-# 3rd-project-uoScholar-Client
+# 3rd-project-uoScholar-Client ( React Native )
 
-## 앱 실행 가이드
-### Window
-```sh
+서울시립대학교 학칙에 대해 사용자가 질문하면 자연어로 답할 수 있는 챗봇 어플리케이션 개발.
+
+## 📱 데모
+
+<img src="./src/assets/demo.gif" width="300" />
+
+## 🛠 기술 스택
+
+- React Native (CLI)
+- TypeScript
+- React Navigation
+- Axios
+
+## 🚀 설치 및 실행 방법
+
+```bash
+# clone repository
+git clone https://github.com/ALOC-dev/3rd-project-uoScholar-Client.git
+cd 3rd-project-uoScholar-Client
+
+# install package
 npm install
-```
 
-```sh
+# start app
 npx react-native run-android
+# 또는
+npx react-native run-ios
 ```
 
-### Emulator를 먼저 키고 터미널로 앱을 실행시키는 경우
-
-```sh
-npm run start
+## 📁 폴더 구조
+```
+src/
+├── api/ # 서버 통신 관련 함수 (ex: Axios 인스턴스, API 요청 함수)
+├── assets/ # 이미지, 아이콘, 폰트 등 정적 파일
+├── components/ # 재사용 가능한 UI 컴포넌트
+├── constants/ # 앱 전역에서 사용하는 상수 (색상, 문자열 등)
+├── navigation/ # 화면 이동(Navigation Stack) 설정
+└── screens/ # 각종 화면 페이지 컴포넌트
 ```
 
-에뮬레이터를 먼저 키고 해당 프로젝트의 터미널에서 명령어를 입력하는 경우, UoScholar의 서버만 열어주면 되기 때문에 해당 명령어를 사용합니다.
+## 🙋 문의
 
-***npm run start***와 ***npm run android***는 서로 다른 터미널에서 실행되어야 합니다.
-
-### Mac
-```sh
-npm install
-```
-
-```sh
-npm run start
-```
-
-```sh
-npm run ios
-```
-
-***npm run start***와 ***npm run android***는 서로 다른 터미널에서 실행되어야 합니다.
+질문 또는 버그 제보는 [Issues](https://github.com/username/project/issues)를 통해 남겨주세요.
