@@ -13,9 +13,10 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'; 
 import IMAGES from '../../../assets/index'; 
 import COLORS from '../../../constants/colors'; 
- 
+import SearchBar from './SearchBar';
+
 const { width } = Dimensions.get('window'); 
- 
+
 const SearchScreen = () => { 
     const insets = useSafeAreaInsets(); 
     const navigation = useNavigation(); 
@@ -38,7 +39,7 @@ const SearchScreen = () => {
 
                 {/* Main */}
                 <View style={styles.contentContainer}>
-                    <Text>메인 구성공간입니다.</Text>
+                    <SearchBar />
                 </View>
             </View> 
         </View> 
