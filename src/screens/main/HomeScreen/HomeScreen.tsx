@@ -5,7 +5,9 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    KeyboardAvoidingView,
+    Platform,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -36,31 +38,41 @@ const HomeScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.root}>
-            <View>
-                {/* Header */}
-                <View style={styles.topContainer}>
-                    <Text style={styles.title}>Chat</Text>
-                    <TouchableOpacity
-                        style={styles.tabBtn}
-                        onPress={() => navigation.navigate('Search')}
-                    >
-                        <Image source={IMAGES.TABICON} style={styles.tabBtnImg} />
-                    </TouchableOpacity>
-                </View>
+    <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
+    >
+        {/* 상단 SafeArea */}
+        <SafeAreaView edges={['top']} style={{ backgroundColor: COLORS.HEADER_BACKGROUND }} />
+
+        <View style={styles.root}>
+            {/* Header */}
+            <View style={styles.topContainer}>
+                <Text style={styles.title}>Chat</Text>
+                <TouchableOpacity
+                    style={styles.tabBtn}
+                    onPress={() => navigation.navigate('Search')}
+                >
+                    <Image source={IMAGES.TABICON} style={styles.tabBtnImg} />
+                </TouchableOpacity>
             </View>
 
-            {/* Main */}
+            {/* Chat */}
             <View style={styles.chatContentContainer}>
                 <ChatContainer chatList={chatList} />
             </View>
 
-            {/* Footer */}
-            <View style={[styles.bottomContainer, { paddingBottom: insets.bottom }]}>
+            {/* Input */}
+            <View style={styles.bottomContainer}>
                 <ChatInput onsend={handleSendMessage} />
             </View>
-        </SafeAreaView>
-    );
+        </View>
+
+        {/* 하단 SafeArea */}
+        {/* <SafeAreaView edges={['bottom']} style={{ backgroundColor: COLORS.FOOTER_BACKGROUND }} /> */}
+    </KeyboardAvoidingView>
+);
 };
 
 const styles = StyleSheet.create({
@@ -88,7 +100,6 @@ const styles = StyleSheet.create({
     tabBtnImg: {
         width: 25,
         height: 25,
-        resizeMode: 'contain'
     },
     keyboardAvoiding: {
         flex: 1
@@ -102,9 +113,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     bottomContainer: {
-        position: 'absolute',
-        width: '100%',
-        height: 90,
+        height: 65,
         bottom: 0,
         padding: 10,
         backgroundColor: COLORS.FOOTER_BACKGROUND,
