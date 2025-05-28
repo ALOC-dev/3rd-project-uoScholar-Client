@@ -14,6 +14,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from '@react-navigation/native';
 import { RootStackParamList } from "../../../navigation/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import IMAGES from "../../../assets/index";
@@ -36,6 +37,7 @@ export type ChatMessage = {
 const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const insets = useSafeAreaInsets();
+  //const isSearchVisible = navigation.getState().routes.some(r => r.name === 'Search');
 
   const [chatList, setChatList] = useState<ChatMessage[]>([]);
 
@@ -46,8 +48,8 @@ const HomeScreen = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      //behavior={isSearchVisible ? undefined : (Platform.OS === "ios" ? "padding" : "height")}
+      behavior={useIsFocused() ? (Platform.OS === 'ios' ? 'padding' : 'height') : undefined}
     >
       {/* 상단 SafeArea */}
       <SafeAreaView
