@@ -7,7 +7,7 @@ import {
     Image,
 } from "react-native";
 import IMAGES from "../../../assets";
-import { sendTextToBackend, getTextFromBackend } from "../../../api/Api";
+import { sendTextToBackend } from "../../../api/Api";
 import { ChatMessage } from "./HomeScreen";
 
 const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
@@ -22,7 +22,11 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
         onsend({ message: currentText, sender: "client" });
 
         try {
-            await sendTextToBackend(currentText);
+            const sentTextResponse = await sendTextToBackend(currentText);
+            onsend({
+                message: sentTextResponse,
+                sender: "bot",
+            });
         } catch (error) {
             console.error("sendTextToBackend 실패:", error.message);
             onsend({
@@ -32,16 +36,16 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
             return;
         }
 
-        try {
-            const backendResponse = await getTextFromBackend();
-            onsend({ message: backendResponse, sender: "bot" });
-        } catch (error: any) {
-            console.error("getTextFromBackend 실패:", error.message);
-            onsend({
-                message: "⚠️ 챗봇 응답 실패: 잠시 후 다시 시도해주세요.",
-                sender: "bot",
-            });
-        }
+        // try {
+        //     const backendResponse = await getTextFromBackend();
+        //     onsend({ message: backendResponse, sender: "bot" });
+        // } catch (error: any) {
+        //     console.error("getTextFromBackend 실패:", error.message);
+        //     onsend({
+        //         message: "⚠️ 챗봇 응답 실패: 잠시 후 다시 시도해주세요.",
+        //         sender: "bot",
+        //     });
+        // }
     };
 
     return (

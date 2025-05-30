@@ -24,14 +24,14 @@ export const sendTextToBackend = async (text: string) => {
     }
 };
 
-export const getTextFromBackend = async () => {
-    const API_URL = 'http://api.example.com/get-response';
+// export const getTextFromBackend = async () => {
+//     const API_URL = 'http://api.example.com/get-response';
 
-    try {
-        const response = await axios.get(API_URL, { timeout: 5000 });
-        return response.data.response;
-    } catch (error) {
-        console.error('API 요청 실패:', error);
-        throw new Error('오류가 발생했습니다.');
-    }
-};
+//     try {
+//         const response = await axios.get(API_URL, { timeout: 5000 });
+//         return response.data.response;
+//     } catch (error) {
+//         console.error('API 요청 실패:', error);
+//         throw new Error('오류가 발생했습니다.');
+//     }
+// };
