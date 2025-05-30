@@ -1,16 +1,18 @@
 const COLORS = {
     // background
-    HEADER_BACKGROUND: 'lightblue',
-    MAIN_BACKGROUND: 'skyblue',
-    FOOTER_BACKGROUND: '#F9FAFB',
+    HEADER_BACKGROUND: '#D6E4FF',
+    MAIN_BACKGROUND: '#FFFFFF',
+    FOOTER_BACKGROUND: '#FFFFFFㅁㄴㅇㄹ',
 
     // text
     TEXT_PRIMARY: 'white',
     TEXT_SECONDARY: '',
 
     // bubble
-    BOT_BUBBLE_BACKGROUND: 'grey',
-    CLIENT_BUBBLE_BACKGROUND: 'black'
+    BOT_BUBBLE_BACKGROUND: '#F0F6FF',
+    CLIENT_BUBBLE_BACKGROUND: '#3366FF',
+    CLIENT_TEXT: '#FFFFFF',
+    BOT_TEXT: '#002766',
 }
 
 export default COLORS;
