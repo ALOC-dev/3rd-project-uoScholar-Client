@@ -41,7 +41,7 @@ const HomeScreen = () => {
     return (
         <View style={[styles.root]}>
             {/* Top Safe Area */}
-            <View style={{ height: insets.top, backgroundColor: COLORS.HEADER_BACKGROUND }} />
+            <View style={{ zIndex: 100, height: insets.top, backgroundColor: COLORS.HEADER_BACKGROUND }} />
 
             {/* Header */}
             <View style={styles.topContainer}>
