@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
     View,
     Text,
     StyleSheet,
     Image,
     TouchableOpacity,
-    Keyboard,
-    Animated,
-    Platform,
 } from "react-native";
 import {
     useSafeAreaInsets,
@@ -19,6 +16,7 @@ import IMAGES from "../../../assets/index";
 import ChatInput from "./ChatInput";
 import ChatContainer from "./ChatContainer";
 import COLORS from "../../../constants/colors";
+import CustomKeyboardAvoidingView from '../../../components/CustomKeyboardAvoidingView';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -35,39 +33,10 @@ const HomeScreen = () => {
     const insets = useSafeAreaInsets();
 
     const [chatList, setChatList] = useState<ChatMessage[]>([]);
-    const translateY = useState(new Animated.Value(0))[0];
 
     const handleSendMessage = (newMessage: ChatMessage) => {
         setChatList((prev) => [...prev, newMessage]);
     };
-
-    // Custom Keyboard Handling
-    useEffect(() => {
-        const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
-        const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
-
-        const showSub = Keyboard.addListener(showEvent, (e) => {
-            const height = e.endCoordinates.height;
-            Animated.timing(translateY, {
-                toValue: -height,
-                duration: e.duration ?? 250,
-                useNativeDriver: true,
-            }).start();
-        });
-
-        const hideSub = Keyboard.addListener(hideEvent, (e) => {
-            Animated.timing(translateY, {
-                toValue: 0,
-                duration: e.duration ?? 250,
-                useNativeDriver: true,
-            }).start();
-    });
-
-    return () => {
-        showSub.remove();
-        hideSub.remove();
-    };
-}, [translateY]);
 
     return (
         <View style={[styles.root]}>
@@ -91,7 +60,7 @@ const HomeScreen = () => {
             </View>
 
             {/* Chat & Input Area */}
-            <Animated.View style={{ flex: 1, transform: [{ translateY }] }}>
+            <CustomKeyboardAvoidingView style={{ flex: 1 }}>
                 {/* Chat Container */}
                 <View style={styles.chatContainer}>
                     <ChatContainer chatList={chatList} />
@@ -101,7 +70,7 @@ const HomeScreen = () => {
                 <View style={styles.inputContainer}>
                     <ChatInput onsend={handleSendMessage} />
                 </View>
-            </Animated.View>
+            </CustomKeyboardAvoidingView>
 
             {/* Bottom Safe Area */}
             <View style={{ height: insets.bottom, backgroundColor: COLORS.FOOTER_BACKGROUND }} />
@@ -142,6 +111,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         paddingVertical: 5,
+        paddingHorizontal: 10,
         backgroundColor: COLORS.FOOTER_BACKGROUND,
     }
 });
