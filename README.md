@@ -45,4 +45,4 @@ src/
 
 ## 🙋 문의
 
-질문 또는 버그 제보는 [Issues](https://github.com/username/project/issues)를 통해 남겨주세요.
+질문 또는 버그 제보는 [Issues](https://github.com/ALOC-dev/3rd-project-uoScholar-Client/issues)를 통해 남겨주세요.
