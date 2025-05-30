@@ -4,36 +4,92 @@ import COLORS from "../../../constants/colors";
 
 interface ChatBubbleProps {
     text: string;
-    sender: "bot" | "client"; //채팅의 주체
+    sender: "bot" | "client";
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender }) => {
+    const timeFormat = (date: Date) => {
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const ampm = hours >= 12 ? '오후' : '오전';
+        const formattedHours = hours % 12 || 12;
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+        return `${ampm} ${formattedHours}:${formattedMinutes}`;
+    };
+
+    const currentTime = timeFormat(new Date());
+    const isBot = sender === 'bot';
+
     return (
-        <View style={[styles.container, sender === "bot" ? styles.botBubble : styles.clientBubble]}>
-            <Text style={styles.text}>{text}</Text>
+        <View style={[
+            styles.rowContainer,
+            isBot ? styles.leftAlign : styles.rightAlign
+        ]}>
+            {/* 왼쪽 시간 (client) */}
+            {!isBot && <Text style={[styles.time]}>{currentTime}</Text>}
+
+            {/* 말풍선 */}
+            <View style={[
+                styles.bubble,
+                isBot ? styles.botBubble : styles.clientBubble
+            ]}>
+                <Text style={[
+                    styles.text,
+                    isBot ? styles.botText : styles.clientText
+                ]}>
+                    {text}
+                </Text>
+            </View>
+
+            {/* 오른쪽 시간 (bot) */}
+            {isBot && <Text style={[styles.time]}>{currentTime}</Text>}
         </View>
     );
-}
+};
+
 
 const styles = StyleSheet.create({
-    container: {
-        maxWidth: "60%", //말풍선 최대 너비 (화면 전체 기준 비율)
-        padding: 10, //말풍선 내부에서 텍스트와 테두리 사이 여백
-        borderRadius: 10, 
+    rowContainer: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
         marginVertical: 5,
     },
+    leftAlign: {
+        alignSelf: 'flex-start',
+    },
+    rightAlign: {
+        alignSelf: 'flex-end',
+    },
+    bubble: {
+        maxWidth: "60%",
+        padding: 10,
+        borderRadius: 10,
+    },
     botBubble: {
-        alignSelf: "flex-start",
         backgroundColor: COLORS.BOT_BUBBLE_BACKGROUND,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: 5,
     },
     clientBubble: {
-        alignSelf: "flex-end",
         backgroundColor: COLORS.CLIENT_BUBBLE_BACKGROUND,
     },
     text: {
-        color: COLORS.TEXT_PRIMARY,
         fontSize: 14,
-    }
+    },
+    botText: {
+        color: COLORS.BOT_TEXT,
+    },
+    clientText: {
+        color: COLORS.CLIENT_TEXT,
+    },
+    time: {
+        fontSize: 10,
+        marginHorizontal: 6,
+        marginBottom: 2,
+    },
 });
 
 export default ChatBubble;
