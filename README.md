@@ -23,6 +23,9 @@ cd 3rd-project-uoScholar-Client
 # install package
 npm install
 
+# clean npm cache
+npm cache clean --force
+
 # start app
 npx react-native run-android
 # 또는
