@@ -1,4 +1,5 @@
 import React from "react";
+import { Dimensions } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { HomeScreen, SearchScreen } from "../screens/index";
 import COLORS from "../constants/colors";
@@ -20,7 +21,7 @@ const DrawerNavigator = () => {
                 drawerActiveTintColor: 'white',
                 drawerActiveBackgroundColor: '#3366FF',
                 swipeEnabled: true,
-                swipeEdgeWidth: 100, // 제스처 인식 범위
+                swipeEdgeWidth: Dimensions.get('window').width, // 제스처 인식 범위
                 drawerStyle: {
                     backgroundColor: COLORS.HEADER_BACKGROUND,
                     width: '70%',
