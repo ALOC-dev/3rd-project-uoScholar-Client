@@ -1,20 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    TouchableOpacity,
+    Keyboard,
+    Animated,
+    Platform,
 } from "react-native";
 import {
-  SafeAreaView,
-  useSafeAreaInsets,
+    useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { useIsFocused } from '@react-navigation/native';
 import { RootStackParamList } from "../../../navigation/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import IMAGES from "../../../assets/index";
@@ -23,111 +21,129 @@ import ChatContainer from "./ChatContainer";
 import COLORS from "../../../constants/colors";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  "Home"
+    RootStackParamList,
+    "Home"
 >;
 
-const { height } = Dimensions.get("window");
-
 export type ChatMessage = {
-  message: string;
-  sender: "bot" | "client";
+    message: string;
+    sender: "bot" | "client";
 };
 
 const HomeScreen = () => {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
-  const insets = useSafeAreaInsets();
-  //const isSearchVisible = navigation.getState().routes.some(r => r.name === 'Search');
+    const navigation = useNavigation<HomeScreenNavigationProp>();
+    const insets = useSafeAreaInsets();
 
-  const [chatList, setChatList] = useState<ChatMessage[]>([]);
+    const [chatList, setChatList] = useState<ChatMessage[]>([]);
+    const translateY = useState(new Animated.Value(0))[0];
 
-  const handleSendMessage = (newMessage: ChatMessage) => {
-    setChatList((prev) => [...prev, newMessage]);
-  };
+    const handleSendMessage = (newMessage: ChatMessage) => {
+        setChatList((prev) => [...prev, newMessage]);
+    };
 
-  return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      //behavior={isSearchVisible ? undefined : (Platform.OS === "ios" ? "padding" : "height")}
-      behavior={useIsFocused() ? (Platform.OS === 'ios' ? 'padding' : 'height') : undefined}
-    >
-      {/* 상단 SafeArea */}
-      <SafeAreaView
-        edges={["top"]}
-        style={{ backgroundColor: COLORS.HEADER_BACKGROUND, flex: 1 }}
-      >
-        <View style={styles.root}>
-          {/* Header */}
-          <View style={styles.topContainer}>
-            <Text style={styles.title}>Chat</Text>
-            <TouchableOpacity
-              style={styles.tabBtn}
-              onPress={() => navigation.navigate("Search")}
-            >
-              <Image source={IMAGES.TABICON} style={styles.tabBtnImg} />
-            </TouchableOpacity>
-          </View>
+    // Custom Keyboard Handling
+    useEffect(() => {
+        const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+        const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
 
-          {/* Chat */}
-          <View style={styles.chatContentContainer}>
-            <ChatContainer chatList={chatList} />
-          </View>
+        const showSub = Keyboard.addListener(showEvent, (e) => {
+            const height = e.endCoordinates.height;
+            Animated.timing(translateY, {
+                toValue: -height,
+                duration: e.duration ?? 250,
+                useNativeDriver: true,
+            }).start();
+        });
 
-          {/* Input */}
-          <View style={styles.bottomContainer}>
-            <ChatInput onsend={handleSendMessage} />
-          </View>
+        const hideSub = Keyboard.addListener(hideEvent, (e) => {
+            Animated.timing(translateY, {
+                toValue: 0,
+                duration: e.duration ?? 250,
+                useNativeDriver: true,
+            }).start();
+    });
+
+    return () => {
+        showSub.remove();
+        hideSub.remove();
+    };
+}, [translateY]);
+
+    return (
+        <View style={[styles.root]}>
+            {/* Top Safe Area */}
+            <View style={{ height: insets.top, backgroundColor: COLORS.HEADER_BACKGROUND }} />
+
+            {/* Header */}
+            <View style={styles.topContainer}>
+                <Text style={styles.title}>
+                    Chat
+                </Text>
+                <TouchableOpacity
+                    style={styles.tabBtn}
+                    onPress={() => navigation.navigate("Search")}
+                >
+                    <Image
+                        source={IMAGES.TABICON}
+                        style={styles.tabBtnImg}
+                    />
+                </TouchableOpacity>
+            </View>
+
+            {/* Chat & Input Area */}
+            <Animated.View style={{ flex: 1, transform: [{ translateY }] }}>
+                {/* Chat Container */}
+                <View style={styles.chatContainer}>
+                    <ChatContainer chatList={chatList} />
+                </View>
+
+                {/* Chat Input */}
+                <View style={styles.inputContainer}>
+                    <ChatInput onsend={handleSendMessage} />
+                </View>
+            </Animated.View>
+
+            {/* Bottom Safe Area */}
+            <View style={{ height: insets.bottom, backgroundColor: COLORS.FOOTER_BACKGROUND }} />
         </View>
-        {/* 하단 SafeArea */}
-        {/* <SafeAreaView edges={['bottom']} style={{ backgroundColor: COLORS.FOOTER_BACKGROUND }} /> */}
-      </SafeAreaView>
-    </KeyboardAvoidingView>
-  );
+    );
 };
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: COLORS.HEADER_BACKGROUND,
-  },
-  topContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 50,
-    backgroundColor: COLORS.HEADER_BACKGROUND,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    position: "absolute",
-  },
-  tabBtn: {
-    position: "absolute",
-    right: 10,
-    padding: 10,
-  },
-  tabBtnImg: {
-    width: 25,
-    height: 25,
-  },
-  keyboardAvoiding: {
-    flex: 1,
-  },
-  chatWrapper: {
-    flex: 1,
-  },
-  chatContentContainer: {
-    flex: 1,
-    backgroundColor: COLORS.MAIN_BACKGROUND,
-    paddingBottom: 10,
-  },
-  bottomContainer: {
-    height: 65,
-    bottom: 0,
-    padding: 10,
-    backgroundColor: COLORS.FOOTER_BACKGROUND,
-  },
+    root: {
+        flex: 1,
+        backgroundColor: COLORS.HEADER_BACKGROUND,
+    },
+    topContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        height: 50,
+        zIndex: 100,
+        backgroundColor: COLORS.HEADER_BACKGROUND,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: "bold",
+        position: "absolute",
+    },
+    tabBtn: {
+        position: "absolute",
+        right: 10,
+        padding: 10,
+    },
+    tabBtnImg: {
+        width: 25,
+        height: 25,
+    },
+    chatContainer: {
+        flex: 1,
+        backgroundColor: COLORS.MAIN_BACKGROUND,
+    },
+    inputContainer: {
+        paddingVertical: 5,
+        backgroundColor: COLORS.FOOTER_BACKGROUND,
+    }
 });
 
 export default HomeScreen;
