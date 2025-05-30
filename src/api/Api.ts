@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const sendTextToBackend = async (text: string) => {
-    const API_URL = 'http://10.0.2.2:8080/api';
+    const API_URL = 'http://10.0.2.2:8080/chat/ai';
 
     const payload = {
         message: text
@@ -9,7 +9,7 @@ export const sendTextToBackend = async (text: string) => {
 
     try {
         const response = await axios.post(API_URL, payload, { timeout: 5000 });
-        return response.data.response;
+        return response.data.message;
     } catch (error: any) {
         let errorMessage = '';
 
