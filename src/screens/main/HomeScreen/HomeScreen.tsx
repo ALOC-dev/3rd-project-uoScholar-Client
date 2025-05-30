@@ -9,7 +9,10 @@ import {
 import {
     useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import {
+    useNavigation,
+    DrawerActions,
+} from "@react-navigation/native";
 import { RootStackParamList } from "../../../navigation/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import IMAGES from "../../../assets/index";
@@ -45,18 +48,18 @@ const HomeScreen = () => {
 
             {/* Header */}
             <View style={styles.topContainer}>
-                <Text style={styles.title}>
-                    Chat
-                </Text>
                 <TouchableOpacity
                     style={styles.tabBtn}
-                    onPress={() => navigation.navigate("Search")}
+                    onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
                 >
                     <Image
                         source={IMAGES.TABICON}
                         style={styles.tabBtnImg}
                     />
                 </TouchableOpacity>
+                <Text style={styles.title}>
+                    Home
+                </Text>
             </View>
 
             {/* Chat & Input Area */}
@@ -98,7 +101,7 @@ const styles = StyleSheet.create({
     },
     tabBtn: {
         position: "absolute",
-        right: 10,
+        left: 10,
         padding: 10,
     },
     tabBtnImg: {
@@ -110,7 +113,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.MAIN_BACKGROUND,
     },
     inputContainer: {
-        paddingVertical: 5,
+        paddingVertical: 10,
         paddingHorizontal: 10,
         backgroundColor: COLORS.FOOTER_BACKGROUND,
     }
