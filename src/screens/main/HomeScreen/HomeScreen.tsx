@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     },
     chatContainer: {
         flex: 1,
+        paddingVertical: 10,
         backgroundColor: COLORS.MAIN_BACKGROUND,
     },
     inputContainer: {

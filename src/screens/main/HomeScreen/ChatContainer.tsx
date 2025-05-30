@@ -26,8 +26,6 @@ const ChatContainer = ({ chatList }: { chatList: ChatMessage[] }) => {
 
 const styles = StyleSheet.create({
     chatContainer: {
-        paddingTop: 5,
-        paddingBottom: 70,
         paddingHorizontal: 10,
     },
 });
