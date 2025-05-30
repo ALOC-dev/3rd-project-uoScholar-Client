@@ -7,38 +7,36 @@ import {
     Image,
 } from "react-native";
 import IMAGES from "../../../assets";
-import { sendTextToBackend, getTextFromBackend } from "../../../api/Api";
+import { sendMessageToChatbot } from "../../../api/Api";
 import { ChatMessage } from "./HomeScreen";
 
-const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
-    const [text, setText] = useState("");
+interface ChatInputProps {
+    onSendMessage: (message: ChatMessage) => void;
+}
 
-    const handleSend = async () => {
-        let currentText = text.trim(); // 공백 입력 방지
-        if (currentText === "") return;
-        setText(""); // 입력창 초기화
+const ChatInput = ({ onSendMessage }: ChatInputProps) => {
+    const [userInput, setUserInput] = useState("");
 
-        // 클라이언트 메세지 먼저 전송
-        onsend({ message: currentText, sender: "client" });
+    const handleSendMessage = async () => {
+        const trimmedInput = userInput.trim();
+        if (trimmedInput === "") return;
+
+        setUserInput(""); // 입력창 초기화
+
+        // 👤 사용자 메시지 전송
+        onSendMessage({ message: trimmedInput, sender: "client" });
 
         try {
-            await sendTextToBackend(currentText);
-        } catch (error) {
-            console.error("sendTextToBackend 실패:", error.message);
-            onsend({
-                message: "❌ 메시지 전송 실패: 서버에 도달하지 못했습니다.",
-                sender: "bot",
+            // 🤖 챗봇 응답 받기
+            const botReply = await sendMessageToChatbot(trimmedInput);
+            onSendMessage({
+                message: botReply,
+                sender: "bot"
             });
-            return;
-        }
-
-        try {
-            const backendResponse = await getTextFromBackend();
-            onsend({ message: backendResponse, sender: "bot" });
         } catch (error: any) {
-            console.error("getTextFromBackend 실패:", error.message);
-            onsend({
-                message: "⚠️ 챗봇 응답 실패: 잠시 후 다시 시도해주세요.",
+            console.error("챗봇 응답 실패:", error.message);
+            onSendMessage({
+                message: "❌ 서버 응답 오류: 다시 시도해주세요.",
                 sender: "bot",
             });
         }
@@ -49,14 +47,14 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
             <View style={styles.inputRow}>
                 <TextInput
                     style={styles.input}
-                    placeholder="텍스트를 입력하세요"
-                    value={text}
-                    onChangeText={setText}
+                    placeholder="메시지를 입력하세요"
+                    value={userInput}
+                    onChangeText={setUserInput}
                 />
-                <TouchableOpacity onPress={handleSend} disabled={text === ""}>
+                <TouchableOpacity onPress={handleSendMessage} disabled={userInput === ""}>
                     <Image
                         source={IMAGES.SEND}
-                        style={text === "" ? styles.nullIcon : styles.Icon}
+                        style={userInput === "" ? styles.nullIcon : styles.icon}
                     />
                 </TouchableOpacity>
             </View>
@@ -67,7 +65,7 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
 const styles = StyleSheet.create({
     inputRow: {
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
     },
     input: {
         flexShrink: 1,
@@ -84,7 +82,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         opacity: 0.5,
     },
-    Icon: {
+    icon: {
         width: 40,
         height: 40,
         marginLeft: 8,
