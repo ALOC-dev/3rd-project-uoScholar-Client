@@ -1,8 +1,8 @@
 const COLORS = {
     // background
     HEADER_BACKGROUND: '#D6E4FF',
-    MAIN_BACKGROUND: '#FFFFFF',
-    FOOTER_BACKGROUND: '#FFFFFFㅁㄴㅇㄹ',
+    MAIN_BACKGROUND: '#D6E4FF',
+    FOOTER_BACKGROUND: '#FFFFFF',
 
     // text
     TEXT_PRIMARY: 'white',
