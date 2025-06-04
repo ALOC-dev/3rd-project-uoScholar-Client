@@ -19,7 +19,7 @@ import IMAGES from "../../../assets/index";
 import ChatInput from "./ChatInput";
 import ChatContainer from "./ChatContainer";
 import COLORS from "../../../constants/colors";
-import CustomKeyboardAvoidingView from '../../../components/CustomKeyboardAvoidingView';
+import CustomKeyboardAvoidingView from '../../../components/CustomKeyboardAvoidingView/CustomKeyboardAvoidingView';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -74,9 +74,6 @@ const HomeScreen = () => {
                     <ChatInput onsend={handleSendMessage} />
                 </View>
             </CustomKeyboardAvoidingView>
-
-            {/* Bottom Safe Area */}
-            <View style={{ height: insets.bottom, backgroundColor: COLORS.FOOTER_BACKGROUND }} />
         </View>
     );
 };
