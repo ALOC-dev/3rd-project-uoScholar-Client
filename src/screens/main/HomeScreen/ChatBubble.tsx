@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from 'react-native';
 import COLORS from "../../../constants/colors";
+import Hyperlink from 'react-native-hyperlink'
+import openURL from "../../../components/openUrl";
 
 interface ChatBubbleProps {
     text: string;
@@ -33,12 +35,17 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender }) => {
                 styles.bubble,
                 isBot ? styles.botBubble : styles.clientBubble
             ]}>
-                <Text style={[
-                    styles.text,
-                    isBot ? styles.botText : styles.clientText
-                ]}>
-                    {text}
-                </Text>
+                <Hyperlink
+	                linkStyle={{color: 'blue'}}
+                    onPress={(url) => openURL(url)}
+                >
+                    <Text style={[
+                        styles.text,
+                        isBot ? styles.botText : styles.clientText
+                    ]}>
+                        {text}
+                    </Text>
+                </Hyperlink>
             </View>
 
             {/* 오른쪽 시간 (bot) */}
