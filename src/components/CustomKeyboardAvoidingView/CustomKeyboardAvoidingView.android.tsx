@@ -47,7 +47,7 @@ const CustomKeyboardAvoidingView = ({ children, style }) => {
     return (
         <Animated.View style={[{ flex: 1, transform: [{ translateY }] }, style]}>
             {children}
-            <View style={{ height: insets.bottom, backgroundColor: COLORS.FOOTER_BACKGROUND }} /> 
+            <View style={{ height: insets.bottom, backgroundColor: COLORS.FOOTER_BACKGROUND }} />
         </Animated.View>
     );
 };
