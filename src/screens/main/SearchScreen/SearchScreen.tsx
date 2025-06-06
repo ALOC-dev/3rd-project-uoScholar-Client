@@ -17,11 +17,11 @@ import { RootStackParamList } from "../../../navigation/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import IMAGES from "../../../assets/index";
 import COLORS from "../../../constants/colors";
-import CustomKeyboardAvoidingView from '../../../components/CustomKeyboardAvoidingView';
+import MainTabs from "../../../navigation/MainTabs";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
-    "Home"
+    "Search"
 >;
 
 export type ChatMessage = {
@@ -61,8 +61,9 @@ const SearchScreen = () => {
             </View>
 
             {/* Body */}
-            <View style={styles.mainContainer} />
-            
+            <View style={styles.mainContainer}>
+                <MainTabs />
+            </View>
         </View>
     );
 };

@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import {
+    View,
     Animated,
     Keyboard,
     Platform,
 } from 'react-native';
+import {
+    SafeAreaView
+} from "react-native-safe-area-context";
+import COLORS from '../constants/colors';
 
 const CustomKeyboardAvoidingView = ({ children, style }) => {
     const [translateY] = useState(new Animated.Value(0));
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     useEffect(() => {
         const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
         const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
         const showSub = Keyboard.addListener(showEvent, (e) => {
+            setKeyboardVisible(true);
             const height = e.endCoordinates.height;
             Animated.timing(translateY, {
                 toValue: -height,
@@ -22,6 +29,7 @@ const CustomKeyboardAvoidingView = ({ children, style }) => {
         });
 
         const hideSub = Keyboard.addListener(hideEvent, (e) => {
+            setKeyboardVisible(false);
             Animated.timing(translateY, {
                 toValue: 0,
                 duration: e.duration ?? 250,
@@ -38,6 +46,9 @@ const CustomKeyboardAvoidingView = ({ children, style }) => {
     return (
         <Animated.View style={[{ flex: 1, transform: [{ translateY }] }, style]}>
             {children}
+            {!keyboardVisible && (
+                <SafeAreaView edges={[ 'bottom' ]} style={{ backgroundColor: COLORS.FOOTER_BACKGROUND }} />
+            )}
         </Animated.View>
     );
 };

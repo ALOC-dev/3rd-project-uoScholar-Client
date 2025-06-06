@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import {
     View,
     Text,
     StyleSheet,
     Image,
     TouchableOpacity,
+    Keyboard,
+    KeyboardEvent,
+    Dimensions,
 } from "react-native";
 import {
-    useSafeAreaInsets,
+    useSafeAreaInsets,SafeAreaView,
 } from "react-native-safe-area-context";
 import {
     useNavigation,
@@ -36,10 +39,25 @@ const HomeScreen = () => {
     const insets = useSafeAreaInsets();
 
     const [chatList, setChatList] = useState<ChatMessage[]>([]);
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     const handleSendMessage = (newMessage: ChatMessage) => {
         setChatList((prev) => [...prev, newMessage]);
     };
+
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            setKeyboardVisible(true);
+        });
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            setKeyboardVisible(false);
+        });
+
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
 
     return (
         <View style={[styles.root]}>
@@ -75,8 +93,6 @@ const HomeScreen = () => {
                 </View>
             </CustomKeyboardAvoidingView>
 
-            {/* Bottom Safe Area */}
-            <View style={{ height: insets.bottom, backgroundColor: COLORS.FOOTER_BACKGROUND }} />
         </View>
     );
 };
@@ -109,7 +125,7 @@ const styles = StyleSheet.create({
         height: 25,
     },
     chatContainer: {
-        flex: 1,
+        flex : 1,
         paddingVertical: 10,
         backgroundColor: COLORS.MAIN_BACKGROUND,
     },

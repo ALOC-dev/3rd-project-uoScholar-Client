@@ -6,16 +6,15 @@ import { ChatMessage } from './HomeScreen';
 const ChatContainer = ({ chatList }: { chatList: ChatMessage[] }) => {
     const scrollViewRef = useRef<ScrollView>(null);
 
-    useEffect(() => {
-        // chatList가 업데이트될 때 맨 아래로 스크롤
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, [chatList]);
-
     return (
         <ScrollView
             ref={scrollViewRef}
             contentContainerStyle={styles.chatContainer}
+            overScrollMode={'never'}
             showsVerticalScrollIndicator={false}
+            onContentSizeChange={() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+    }}
         >
             {chatList.map((chat, index) => (
                 <ChatBubble key={index} text={chat.message} sender={chat.sender} />
