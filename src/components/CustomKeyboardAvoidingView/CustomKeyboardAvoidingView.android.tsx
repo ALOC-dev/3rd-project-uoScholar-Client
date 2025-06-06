@@ -6,11 +6,12 @@ import {
     Platform,
 } from 'react-native';
 import {
-    SafeAreaView
+    useSafeAreaInsets
 } from "react-native-safe-area-context";
-import COLORS from '../constants/colors';
+import COLORS from '../../constants/colors';
 
 const CustomKeyboardAvoidingView = ({ children, style }) => {
+    const insets = useSafeAreaInsets();
     const [translateY] = useState(new Animated.Value(0));
     const [keyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -46,9 +47,7 @@ const CustomKeyboardAvoidingView = ({ children, style }) => {
     return (
         <Animated.View style={[{ flex: 1, transform: [{ translateY }] }, style]}>
             {children}
-            {!keyboardVisible && (
-                <SafeAreaView edges={[ 'bottom' ]} style={{ backgroundColor: COLORS.FOOTER_BACKGROUND }} />
-            )}
+            <View style={{ height: insets.bottom, backgroundColor: COLORS.FOOTER_BACKGROUND }} />
         </Animated.View>
     );
 };
