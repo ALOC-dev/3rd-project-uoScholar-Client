@@ -38,22 +38,21 @@ const HomeScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={[ styles.inner, { paddingTop: insets.top, paddingBottom: insets.bottom}]}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <TouchableOpacity
-                        style={styles.tabBtn}
-                        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-                    >
-                        <Image source={IMAGES.TABICON} style={styles.tabIcon} />
-                    </TouchableOpacity>
-                </View>
-                
+            <View style={[ styles.inner, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
                 <KeyboardAvoidingView
                     style={{ flex: 1 }}
-                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                    keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top : 0}
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 >   
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <TouchableOpacity
+                            style={styles.tabBtn}
+                            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                        >
+                            <Image source={IMAGES.TABICON} style={styles.tabIcon} />
+                        </TouchableOpacity>
+                    </View>
+                
                     {/* Chat Area */}
                     <View style={styles.chatContainer}>
                         <ChatContainer chatList={chatList} />
@@ -104,11 +103,6 @@ const styles = StyleSheet.create({
     inputContainer: {
         padding: 10,
         backgroundColor: COLORS.FOOTER_BACKGROUND,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 5,
     },
 });
 
