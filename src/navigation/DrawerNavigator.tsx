@@ -5,8 +5,8 @@ import { HomeScreen, SearchScreen } from "../screens/index";
 import COLORS from "../constants/colors";
 
 export type DrawerParamList = {
-    Home: undefined;
-    Search: undefined;
+  Home: undefined;
+  Search: undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();

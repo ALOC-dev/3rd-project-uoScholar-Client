@@ -1,18 +1,18 @@
 const COLORS = {
-    // background #BACEE0
-    HEADER_BACKGROUND: '#FFFFFF',
-    MAIN_BACKGROUND: '#FFFFFF',
-    FOOTER_BACKGROUND: '#FFFFFF',
+  // background #BACEE0
+  HEADER_BACKGROUND: '#FFFFFF',
+  MAIN_BACKGROUND: '#FFFFFF',
+  FOOTER_BACKGROUND: '#FFFFFF',
 
-    // text
-    TEXT_PRIMARY: 'white',
-    TEXT_SECONDARY: '',
+  // text
+  TEXT_PRIMARY: "white",
+  TEXT_SECONDARY: "",
 
-    // bubble
-    BOT_BUBBLE_BACKGROUND: '#F0F6FF',
-    CLIENT_BUBBLE_BACKGROUND: '#3366FF',
-    CLIENT_TEXT: '#FFFFFF',
-    BOT_TEXT: '#002766',
-}
+  // bubble
+  BOT_BUBBLE_BACKGROUND: "#F0F6FF",
+  CLIENT_BUBBLE_BACKGROUND: "#3366FF",
+  CLIENT_TEXT: "#FFFFFF",
+  BOT_TEXT: "#002766",
+};
 
 export default COLORS;
