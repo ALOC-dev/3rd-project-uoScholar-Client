@@ -22,6 +22,16 @@ const DrawerNavigator = () => {
                 drawerActiveBackgroundColor: '#EAEAEA',
                 swipeEnabled: true,
                 swipeEdgeWidth: Dimensions.get('window').width, // 제스처 인식 범위
+                
+                drawerLabelStyle: {
+                    fontSize: 16,
+                },
+
+                drawerItemStyle: {
+                    borderRadius: 25,
+                    paddingHorizontal: 20,
+                },
+
                 drawerStyle: {
                     backgroundColor: COLORS.HEADER_BACKGROUND,
                     width: '70%',
