@@ -21,35 +21,36 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender }) => {
 
     const currentTime = timeFormat(new Date());
     const isBot = sender === 'bot';
+    const noticeCount = text.length;
 
-    return (
-        <View style={[
-            styles.rowContainer,
-            isBot ? styles.leftAlign : styles.rightAlign
-        ]}>
-            {/* 왼쪽 시간 (client) */}
-            {!isBot && <Text style={[styles.time]}>{currentTime}</Text>}
+    return isBot ? (
+        <View style={[styles.rowContainer, styles.leftAlign]}>
+            {/* 말풍선 */}
+            <View style={[styles.bubble, styles.botBubble]}>
+                <Text style={[styles.text, styles.botText]}>
+                    {text}
+                </Text>
+            </View>
+
+            {/* 시간 */}
+            <Text style={styles.time}>{currentTime}</Text>
+        </View>
+    ) : (
+        <View style={[styles.rowContainer, styles.rightAlign]}>
+            {/* 시간 */}
+            <Text style={styles.time}>{currentTime}</Text>
 
             {/* 말풍선 */}
-            <View style={[
-                styles.bubble,
-                isBot ? styles.botBubble : styles.clientBubble
-            ]}>
+            <View style={[styles.bubble, styles.clientBubble]}>
                 <Hyperlink
-	                linkStyle={{color: 'blue'}}
+                    linkStyle={{ color: 'blue' }}
                     onPress={(url) => openURL(url)}
                 >
-                    <Text style={[
-                        styles.text,
-                        isBot ? styles.botText : styles.clientText
-                    ]}>
+                    <Text style={[styles.text, styles.clientText]}>
                         {text}
                     </Text>
                 </Hyperlink>
             </View>
-
-            {/* 오른쪽 시간 (bot) */}
-            {isBot && <Text style={[styles.time]}>{currentTime}</Text>}
         </View>
     );
 };
