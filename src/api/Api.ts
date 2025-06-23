@@ -1,14 +1,14 @@
 import axios from 'axios';
 
 export const sendTextToBackend = async (text: string) => {
-    const API_URL = 'https://8080-alocdev-3rdprojectuosch-ktcw739zisn.ws-us120.gitpod.io';
+    const API_URL = 'https://8080-alocdev-3rdprojectuosch-ktcw739zisn.ws-us120.gitpod.io/chat/ai';
 
     const payload = {
         message: text
     }
 
     try {
-        const response = await axios.post(API_URL, payload, { timeout: 5000 });
+        const response = await axios.post(API_URL, payload, { timeout: 10000 });
         return response.data.message;
     } catch (error: any) {
         let errorMessage = '';
