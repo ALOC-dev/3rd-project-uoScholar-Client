@@ -6,7 +6,9 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  Image,
 } from "react-native";
+import IMAGES from "../assets/index";
 
 const Tab = createBottomTabNavigator();
 
@@ -83,20 +85,71 @@ const DepartmentNotice = () => (
   </ScrollView>
 );
 
-const MainTabs = () => {
+type MainTabsProps = {
+  onTabChange: (title: string) => void;
+};
+
+const MainTabs = ({ onTabChange }) => {
   return (
     <Tab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: styles.tabBarStyle,
         tabBarLabelStyle: styles.tabBarLabelStyle,
-        tabBarActiveTintColor: "tomato",
+        tabBarActiveTintColor: "black",
         tabBarInactiveTintColor: "gray",
-      }}
+        tabBarIcon: ({ focused }) => {
+          let iconSource;
+
+          switch (route.name) {
+            case "일반 공지":
+              iconSource = IMAGES.MEGAPHONE;
+              break;
+            case "학사 공지":
+              iconSource = IMAGES.ACADEMIC;
+              break;
+            case "학과 공지":
+              iconSource = IMAGES.BOOK;
+              break;
+            // default:
+            //   iconSource = noticeIcon;
+          }
+
+          return (
+            <Image
+              source={iconSource}
+              style={{
+                width: 24,
+                height: 24,
+                opacity: focused ? 1 : 0.3,
+                resizeMode: "contain",
+              }}
+            />
+          );
+        },
+      })}
     >
-      <Tab.Screen name="일반 공지" component={GeneralNotice} />
-      <Tab.Screen name="학사 공지" component={AcademicNotice} />
-      <Tab.Screen name="학과 공지" component={DepartmentNotice} />
+      <Tab.Screen
+        name="일반 공지"
+        component={GeneralNotice}
+        listeners={{
+          focus: () => onTabChange("일반 공지"),
+        }}
+      />
+      <Tab.Screen
+        name="학사 공지"
+        component={AcademicNotice}
+        listeners={{
+          focus: () => onTabChange("학사 공지"),
+        }}
+      />
+      <Tab.Screen
+        name="학과 공지"
+        component={DepartmentNotice}
+        listeners={{
+          focus: () => onTabChange("학과 공지"),
+        }}
+      />
     </Tab.Navigator>
   );
 };

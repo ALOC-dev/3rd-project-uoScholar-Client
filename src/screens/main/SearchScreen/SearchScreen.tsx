@@ -19,6 +19,7 @@ export type ChatMessage = {
 };
 
 const SearchScreen = () => {
+  const [headerTitle, setHeaderTitle] = useState<string>("Search1");
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const insets = useSafeAreaInsets();
 
@@ -53,12 +54,12 @@ const SearchScreen = () => {
         >
           <Image source={IMAGES.SEARCHICON} style={styles.tabBtnImg} />
         </TouchableOpacity>
-        <Text style={styles.title}>Search1</Text>
+        <Text style={styles.title}>{headerTitle}</Text>
       </View>
 
       {/* Body */}
       <View style={styles.mainContainer}>
-        <MainTabs />
+        <MainTabs onTabChange={setHeaderTitle} />
       </View>
     </View>
   );
