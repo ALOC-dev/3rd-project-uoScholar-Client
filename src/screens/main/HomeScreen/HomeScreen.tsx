@@ -1,28 +1,22 @@
-import React, { useState, useEffect} from "react";
+import React, { useState } from 'react';
 import {
     View,
-    Text,
-    StyleSheet,
     Image,
-    TouchableOpacity,
+    Platform,
     Keyboard,
-    KeyboardEvent,
-    Dimensions,
-} from "react-native";
-import {
-    useSafeAreaInsets,SafeAreaView,
-} from "react-native-safe-area-context";
-import {
-    useNavigation,
-    DrawerActions,
-} from "@react-navigation/native";
-import { RootStackParamList } from "../../../navigation/types";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import IMAGES from "../../../assets/index";
+    StyleSheet,
+    SafeAreaView,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+} from 'react-native';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation, DrawerActions } from "@react-navigation/native";
 import ChatInput from "./ChatInput";
 import ChatContainer from "./ChatContainer";
 import COLORS from "../../../constants/colors";
-import CustomKeyboardAvoidingView from '../../../components/CustomKeyboardAvoidingView/CustomKeyboardAvoidingView';
+import IMAGES from "../../../assets/index";
+import { RootStackParamList } from "../../../navigation/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -37,102 +31,76 @@ export type ChatMessage = {
 const HomeScreen = () => {
     const navigation = useNavigation<HomeScreenNavigationProp>();
     const insets = useSafeAreaInsets();
-
     const [chatList, setChatList] = useState<ChatMessage[]>([]);
-    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     const handleSendMessage = (newMessage: ChatMessage) => {
         setChatList((prev) => [...prev, newMessage]);
     };
 
-    useEffect(() => {
-        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
-            setKeyboardVisible(true);
-        });
-        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
-            setKeyboardVisible(false);
-        });
-
-        return () => {
-            showSubscription.remove();
-            hideSubscription.remove();
-        };
-    }, []);
-
     return (
-        <View style={[styles.root]}>
-            {/* Top Safe Area */}
-            <View style={{ zIndex: 100, height: insets.top, backgroundColor: COLORS.HEADER_BACKGROUND }} />
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={[ styles.inner, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        style={styles.tabBtn}
+                        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                    >
+                        <Image source={IMAGES.TABICON} style={styles.tabIcon} />
+                    </TouchableOpacity>
+                </View>
+                
+                <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    behavior={Platform.OS === "ios" ? "padding" : undefined}
+                >   
+                    {/* Chat Area */}
+                    <View style={styles.chatContainer}>
+                        <ChatContainer chatList={chatList} />
+                    </View>
 
-            {/* Header */}
-            <View style={styles.topContainer}>
-                <TouchableOpacity
-                    style={styles.tabBtn}
-                    onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-                >
-                    <Image
-                        source={IMAGES.TABICON}
-                        style={styles.tabBtnImg}
-                    />
-                </TouchableOpacity>
-                <Text style={styles.title}>
-                </Text>
+                    {/* Input */}
+                    <View style={styles.inputContainer}>
+                        <ChatInput onsend={handleSendMessage} />
+                    </View>
+                </KeyboardAvoidingView> 
             </View>
-
-            {/* Chat & Input Area */}
-            <CustomKeyboardAvoidingView style={{ flex: 1 }}>
-                {/* Chat Container */}
-                <View style={styles.chatContainer}>
-                    <ChatContainer chatList={chatList} />
-                </View>
-
-                {/* Chat Input */}
-                <View style={styles.inputContainer}>
-                    <ChatInput onsend={handleSendMessage} />
-                </View>
-            </CustomKeyboardAvoidingView>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-    root: {
+    container: {
         flex: 1,
-        backgroundColor: COLORS.HEADER_BACKGROUND,
     },
-    topContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
+    inner: {
+        flex: 1,
+        backgroundColor: COLORS.MAIN_BACKGROUND,
+    },
+    header: {
+        paddingHorizontal: 10,
+        paddingBottom: 10,
         height: 50,
-        zIndex: 100,
-        backgroundColor: COLORS.HEADER_BACKGROUND,
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: "bold",
-        position: "absolute",
+        backgroundColor: COLORS.MAIN_BACKGROUND,
     },
     tabBtn: {
-        position: "absolute",
-        left: 5,
         padding: 10,
     },
-    tabBtnImg: {
+    tabIcon: {
         width: 24,
         height: 24,
     },
     chatContainer: {
-        flex : 1,
-        paddingVertical: 10,
+        flex: 1,
+        paddingBottom: 5,
+        paddingHorizontal: 10,
         backgroundColor: COLORS.MAIN_BACKGROUND,
     },
     inputContainer: {
         paddingVertical: 10,
         paddingHorizontal: 10,
         backgroundColor: COLORS.FOOTER_BACKGROUND,
-        shadowColor: "#000",
-    }
+    },
 });
 
 export default HomeScreen;
