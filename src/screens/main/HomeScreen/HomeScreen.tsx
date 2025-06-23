@@ -76,7 +76,6 @@ const HomeScreen = () => {
                     />
                 </TouchableOpacity>
                 <Text style={styles.title}>
-                    Home
                 </Text>
             </View>
 
@@ -116,12 +115,12 @@ const styles = StyleSheet.create({
     },
     tabBtn: {
         position: "absolute",
-        left: 10,
+        left: 5,
         padding: 10,
     },
     tabBtnImg: {
-        width: 25,
-        height: 25,
+        width: 24,
+        height: 24,
     },
     chatContainer: {
         flex : 1,
@@ -132,6 +131,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 10,
         backgroundColor: COLORS.FOOTER_BACKGROUND,
+        shadowColor: "#000",
     }
 });
 
