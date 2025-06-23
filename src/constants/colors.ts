@@ -1,7 +1,7 @@
 const COLORS = {
     // background
-    HEADER_BACKGROUND: '#D6E4FF',
-    MAIN_BACKGROUND: '#D6E4FF',
+    HEADER_BACKGROUND: '#BACEE0',
+    MAIN_BACKGROUND: '#BACEE0',
     FOOTER_BACKGROUND: '#FFFFFF',
 
     // text
