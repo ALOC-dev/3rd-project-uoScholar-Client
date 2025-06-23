@@ -3,7 +3,6 @@ import {
     View,
     Image,
     Platform,
-    Keyboard,
     StyleSheet,
     SafeAreaView,
     TouchableOpacity,
@@ -39,7 +38,7 @@ const HomeScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={[ styles.inner, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+            <View style={[ styles.inner, { paddingTop: insets.top, paddingBottom: insets.bottom}]}>
                 {/* Header */}
                 <View style={styles.header}>
                     <TouchableOpacity
@@ -52,7 +51,8 @@ const HomeScreen = () => {
                 
                 <KeyboardAvoidingView
                     style={{ flex: 1 }}
-                    behavior={Platform.OS === "ios" ? "padding" : undefined}
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? insets.top : 0}
                 >   
                     {/* Chat Area */}
                     <View style={styles.chatContainer}>
@@ -92,14 +92,23 @@ const styles = StyleSheet.create({
     },
     chatContainer: {
         flex: 1,
-        paddingBottom: 5,
         paddingHorizontal: 10,
         backgroundColor: COLORS.MAIN_BACKGROUND,
     },
-    inputContainer: {
-        paddingVertical: 10,
+    scrollContent: {
+        flexGrow: 1,
         paddingHorizontal: 10,
+        paddingBottom: 10,
+        backgroundColor: COLORS.MAIN_BACKGROUND,
+    },
+    inputContainer: {
+        padding: 10,
         backgroundColor: COLORS.FOOTER_BACKGROUND,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 5,
     },
 });
 
