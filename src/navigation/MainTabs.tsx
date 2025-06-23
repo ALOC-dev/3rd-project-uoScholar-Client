@@ -1,4 +1,3 @@
-// navigation/MainTabs.tsx
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useEffect, useState } from "react";
 import {
@@ -12,21 +11,26 @@ import {
 const Tab = createBottomTabNavigator();
 
 const GeneralNotice = () => {
-  const [notices, setNotices] = useState<string[]>([]);
+  const [blockNotices, setBlockNotices] = useState<string[]>([]);
+  const [cardNotices, setCardNotices] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 예시용 더미 fetch (실제 웹사이트 파싱 또는 API 사용 가능)
     const fetchData = async () => {
       try {
-        // 이곳에 실제 fetch 코드 삽입 (API 또는 웹 크롤링 결과)
-        const dummyNotices = [
+        const dummyBlockNotices = [
           "📢 수강 정정 일정 안내",
           "📌 졸업 요건 변경 안내",
           "🛠 시스템 점검 예정 공지",
         ];
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // 시뮬레이션
-        setNotices(dummyNotices);
+        const dummyCardNotices = [
+          "📎 교내 행사 일정 공지",
+          "💡 수업 방식 변경 안내",
+          "🚨 긴급 알림: 서버 점검",
+        ];
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setBlockNotices(dummyBlockNotices);
+        setCardNotices(dummyCardNotices);
       } catch (err) {
         console.error(err);
       } finally {
@@ -45,11 +49,23 @@ const GeneralNotice = () => {
       {loading ? (
         <ActivityIndicator size="large" color="gray" />
       ) : (
-        notices.map((notice, idx) => (
-          <View key={idx} style={styles.noticeCard}>
-            <Text style={styles.noticeText}>{notice}</Text>
-          </View>
-        ))
+        <>
+          {cardNotices.map((notice, idx) => (
+            <View key={`card-${idx}`} style={styles.noticeCard}>
+              <Text style={styles.noticeText}>{notice}</Text>
+              <Text style={styles.noticeSubText}>2025년 6월 6일 · 학사팀</Text>
+            </View>
+          ))}
+
+          {blockNotices.map((notice, idx) => (
+            <View key={`block-${idx}`} style={styles.noticeBlock}>
+              <Text style={styles.noticeText}>{notice}</Text>
+              <Text style={styles.noticeSubText}>
+                2025년 6월 6일 · 공지관리자
+              </Text>
+            </View>
+          ))}
+        </>
       )}
     </ScrollView>
   );
@@ -97,11 +113,22 @@ const styles = StyleSheet.create({
   tabBarLabelStyle: {
     fontWeight: "bold",
   },
-  //추가된 스타일 vvv
   scrollContainer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    gap: 12, // 항목 간 간격 (React Native 0.71 이상 지원)
+    gap: 12,
+  },
+  noticeBlock: {
+    width: "100%",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+  },
+  noticeText: {
+    fontSize: 16,
+    color: "#333",
+    lineHeight: 22,
   },
   noticeCard: {
     width: "100%",
@@ -114,10 +141,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  noticeText: {
-    fontSize: 16,
-    color: "#333",
-    lineHeight: 22,
+  noticeSubText: {
+    fontSize: 12,
+    color: "#888",
+    marginTop: 4,
   },
 });
 
