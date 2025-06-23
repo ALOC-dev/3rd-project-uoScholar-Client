@@ -7,9 +7,10 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import IMAGES from "../../../assets/index";
 import COLORS from "../../../constants/colors";
 import MainTabs from "../../../navigation/MainTabs";
+import { SearchStackParamList } from "../../../navigation/SearchStack"; // 올바른 경로 확인 필요
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
+type SearchScreenNavigationProp = NativeStackNavigationProp<
+  SearchStackParamList,
   "Search"
 >;
 
@@ -19,8 +20,8 @@ export type ChatMessage = {
 };
 
 const SearchScreen = () => {
-  const [headerTitle, setHeaderTitle] = useState<string>("Search1");
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  const [headerTitle, setHeaderTitle] = useState<string>("Search");
+  const navigation = useNavigation<SearchScreenNavigationProp>();
   const insets = useSafeAreaInsets();
 
   const [chatList, setChatList] = useState<ChatMessage[]>([]);
@@ -50,10 +51,11 @@ const SearchScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.srchBtn}
-          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+          onPress={() => navigation.navigate("SearchInput")}
         >
           <Image source={IMAGES.SEARCHICON} style={styles.tabBtnImg} />
         </TouchableOpacity>
+
         <Text style={styles.title}>{headerTitle}</Text>
       </View>
 
