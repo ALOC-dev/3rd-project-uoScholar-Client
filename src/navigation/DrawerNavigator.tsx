@@ -18,8 +18,8 @@ const DrawerNavigator = () => {
             screenOptions={{
                 drawerPosition: 'left',
                 drawerType: 'slide',
-                drawerActiveTintColor: 'white',
-                drawerActiveBackgroundColor: '#3366FF',
+                drawerActiveTintColor: 'black',
+                drawerActiveBackgroundColor: '#EAEAEA',
                 swipeEnabled: true,
                 swipeEdgeWidth: Dimensions.get('window').width, // 제스처 인식 범위
                 drawerStyle: {
