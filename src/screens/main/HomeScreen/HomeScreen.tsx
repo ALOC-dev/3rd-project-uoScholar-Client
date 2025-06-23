@@ -39,20 +39,20 @@ const HomeScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={[ styles.inner, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        style={styles.tabBtn}
+                        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                    >
+                        <Image source={IMAGES.TABICON} style={styles.tabIcon} />
+                    </TouchableOpacity>
+                </View>
+                
                 <KeyboardAvoidingView
                     style={{ flex: 1 }}
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 >   
-                    {/* Header */}
-                    <View style={styles.header}>
-                        <TouchableOpacity
-                            style={styles.tabBtn}
-                            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-                        >
-                            <Image source={IMAGES.TABICON} style={styles.tabIcon} />
-                        </TouchableOpacity>
-                    </View>
-                
                     {/* Chat Area */}
                     <View style={styles.chatContainer}>
                         <ChatContainer chatList={chatList} />
