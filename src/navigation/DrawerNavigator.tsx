@@ -28,7 +28,7 @@ const DrawerNavigator = () => {
                 },
 
                 drawerItemStyle: {
-                    borderRadius: 25,
+                    borderRadius: 20,
                     paddingHorizontal: 20,
                 },
 
