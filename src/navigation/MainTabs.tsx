@@ -55,10 +55,10 @@ const MainTabs = ({ onTabChange }) => {
       })}
     >
       <Tab.Screen
-        name="일반 공지"
-        component={GeneralNotice}
+        name="학과 공지"
+        component={DepartmentNotice}
         listeners={{
-          focus: () => onTabChange("일반 공지"),
+          focus: () => onTabChange("학과 공지"),
         }}
       />
       <Tab.Screen
@@ -69,10 +69,10 @@ const MainTabs = ({ onTabChange }) => {
         }}
       />
       <Tab.Screen
-        name="학과 공지"
-        component={DepartmentNotice}
+        name="일반 공지"
+        component={GeneralNotice}
         listeners={{
-          focus: () => onTabChange("학과 공지"),
+          focus: () => onTabChange("일반 공지"),
         }}
       />
     </Tab.Navigator>
