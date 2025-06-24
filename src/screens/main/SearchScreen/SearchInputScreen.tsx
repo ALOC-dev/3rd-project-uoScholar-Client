@@ -1,4 +1,3 @@
-// /screens/main/SearchScreen/SearchInputScreen.tsx
 import React from "react";
 import {
   View,
@@ -6,10 +5,19 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Text,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import IMAGES from "../../../assets/index"; // ← 뒤로가기 아이콘이 여기에 있다고 가정
+import IMAGES from "../../../assets/index";
+
+const popularKeywords = [
+  "졸업 요건",
+  "현장실습",
+  "AI 특강",
+  "교환학생",
+  "장학금",
+];
 
 const SearchInputScreen = () => {
   const navigation = useNavigation();
@@ -18,19 +26,33 @@ const SearchInputScreen = () => {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* 🔙 수동 뒤로가기 버튼 */}
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.backButton}
-      >
-        <Image source={IMAGES.BACKWARD} style={styles.backIcon} />
-      </TouchableOpacity>
+      <View style={styles.inputContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Image source={IMAGES.BACKWARD} style={styles.backButton} />
+        </TouchableOpacity>
 
-      {/* 🔍 검색창 */}
-      <TextInput
-        placeholder="검색어를 입력해주세요."
-        style={styles.input}
-        autoFocus
-      />
+        {/* 🔍 검색창 */}
+        <TextInput
+          placeholder="검색어를 입력해주세요."
+          style={styles.input}
+          autoFocus
+        />
+      </View>
+
+      {/* 🔥 인기 키워드 섹션 */}
+      <View style={styles.popularContainer}>
+        <Text style={styles.popularTitle}>인기 키워드</Text>
+        <View style={styles.keywordList}>
+          {popularKeywords.map((keyword, idx) => (
+            <TouchableOpacity key={idx} style={styles.keywordBadge}>
+              <Text style={styles.keywordText}>{keyword}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
     </View>
   );
 };
@@ -41,26 +63,48 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "white",
   },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F2F3F5",
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    height: 40,
+    marginHorizontal: 20,
+  },
   input: {
-    marginTop: 40, // 뒤로가기 버튼과 간격
-    height: 50,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    backgroundColor: "#f0f0f0",
+    flex: 1,
+    fontSize: 16,
   },
   backButton: {
-    position: "absolute",
-    top: 16,
-    left: 16,
-    padding: 8,
-    zIndex: 10,
-  },
-  backIcon: {
-    width: 24,
-    height: 100,
+    marginRight: 8,
+    width: 20,
+    height: 20, // ⬅ 여기서 기존 100을 줄임
     resizeMode: "contain",
+  },
+  popularContainer: {
+    marginTop: 24,
+  },
+  popularTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: "#333",
+  },
+  keywordList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  keywordBadge: {
+    backgroundColor: "#eee",
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  keywordText: {
+    fontSize: 14,
+    color: "#555",
   },
 });
 
