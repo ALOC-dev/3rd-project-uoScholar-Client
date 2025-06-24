@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const sendTextToBackend = async (text: string) => {
-    const API_URL = 'https://8080-alocdev-3rdprojectuosch-ktcw739zisn.ws-us120.gitpod.io/chat/ai';
+    const API_URL = 'https://8080-alocdev-3rdprojectuosch-n6lv1j3148j.ws-us120.gitpod.io/chat/ai';
 
     const payload = {
         message: text

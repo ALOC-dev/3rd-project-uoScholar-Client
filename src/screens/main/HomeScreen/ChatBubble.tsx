@@ -26,6 +26,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender, link }) => {
                 <Text
                     style={[styles.text, styles.botText]}
                     onPress={() => {
+                        console.log("Link clicked:", link);
                         if (link && link.trim() !== "") {
                             Linking.openURL(link);
                         }
@@ -61,11 +62,11 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
     },
     bubble: {
-        maxWidth: "60%",
         padding: 10,
         borderRadius: 10,
     },
     botBubble: {
+        maxWidth: "70%",
         backgroundColor: COLORS.BOT_BUBBLE_BACKGROUND,
         borderWidth: 1,
         borderColor: "#CFCFCF",
@@ -73,16 +74,17 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
-        shadowRadius: 10,
+        shadowRadius: 5,
         elevation: 10,
     },
     clientBubble: {
+        maxWidth: "60%",
         backgroundColor: COLORS.CLIENT_BUBBLE_BACKGROUND,
 
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
-        shadowRadius: 10,
+        shadowRadius: 5,
         elevation: 10,
     },
     text: {

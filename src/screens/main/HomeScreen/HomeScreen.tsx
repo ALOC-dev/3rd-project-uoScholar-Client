@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     height: 50,
     backgroundColor: COLORS.MAIN_BACKGROUND,
+    opacity: 1,
   },
   tabBtn: {
     padding: 10,
@@ -102,7 +103,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.MAIN_BACKGROUND,
   },
   inputContainer: {
-    padding: 10,
+    paddingTop: 5,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
     backgroundColor: COLORS.FOOTER_BACKGROUND,
   },
 });

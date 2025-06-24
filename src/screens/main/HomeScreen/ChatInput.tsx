@@ -38,6 +38,7 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
 
                 final_text += sentTextResponse[i].title;
                 final_text += "\n";   
+                final_text += "부서: "
                 final_text += sentTextResponse[i].department;
                 final_text += "\n";
                 final_text += sentTextResponse[i].posted_date;
