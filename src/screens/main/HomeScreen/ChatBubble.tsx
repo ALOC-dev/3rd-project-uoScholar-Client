@@ -67,9 +67,23 @@ const styles = StyleSheet.create({
     },
     botBubble: {
         backgroundColor: COLORS.BOT_BUBBLE_BACKGROUND,
+        borderWidth: 1,
+        borderColor: "#CFCFCF",
+
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 10,
+        elevation: 10,
     },
     clientBubble: {
         backgroundColor: COLORS.CLIENT_BUBBLE_BACKGROUND,
+
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 10,
+        elevation: 10,
     },
     text: {
         fontSize: 14,
