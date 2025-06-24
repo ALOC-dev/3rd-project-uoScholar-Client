@@ -7,6 +7,7 @@ const IMAGES = {
   BACKWARD: require("./images/arrow-back-outline.png"),
   UNSEND: require("./images/unsend.png"),
   SEND: require("./images/send.png"),
+  X: require("./images/X.png"),
 };
 
 export default IMAGES;
