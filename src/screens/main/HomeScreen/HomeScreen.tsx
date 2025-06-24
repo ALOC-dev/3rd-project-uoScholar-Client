@@ -25,6 +25,7 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 export type ChatMessage = {
     message: string;
     sender: "bot" | "client";
+    link: string;
 };
 
 const HomeScreen = () => {
@@ -37,7 +38,6 @@ const HomeScreen = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
             <View style={[ styles.inner, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
                 {/* Header */}
                 <View style={styles.header}>
@@ -52,6 +52,7 @@ const HomeScreen = () => {
                 <KeyboardAvoidingView
                     style={{ flex: 1 }}
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 0}
                 >   
                     {/* Chat Area */}
                     <View style={styles.chatContainer}>
@@ -64,7 +65,6 @@ const HomeScreen = () => {
                     </View>
                 </KeyboardAvoidingView> 
             </View>
-        </SafeAreaView>
     );
 };
 

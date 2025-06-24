@@ -19,19 +19,41 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
         setText(""); // 입력창 초기화
 
         // 클라이언트 메세지 먼저 전송
-        onsend({ message: currentText, sender: "client" });
+        onsend({ message: currentText, sender: "client", link: "" });
 
         try {
             const sentTextResponse = await sendTextToBackend(currentText);
-            onsend({
-                message: sentTextResponse,
-                sender: "bot",
-            });
+
+            if (sentTextResponse.length === 0) {
+                onsend({
+                    message: "원하시는 정보를 찾을 수 없습니다.",
+                    sender: "bot",
+                    link: ""
+                });
+                return;
+            }
+            
+            for (let i = 0; i < sentTextResponse.length; i++) {
+                let final_text = "";
+
+                final_text += sentTextResponse[i].title;
+                final_text += "\n";   
+                final_text += sentTextResponse[i].department;
+                final_text += "\n";
+                final_text += sentTextResponse[i].posted_date;
+
+                onsend({
+                    message: final_text,
+                    sender: "bot",
+                    link: sentTextResponse[i].link,
+                });
+            }
         } catch (error) {
             console.error("sendTextToBackend 실패:", error.message);
             onsend({
                 message: "❌ 메시지 전송 실패: 서버에 도달하지 못했습니다.",
                 sender: "bot",
+                link: ""
             });
             return;
         }

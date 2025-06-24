@@ -10,14 +10,16 @@ const ChatContainer = ({ chatList }: { chatList: ChatMessage[] }) => {
         <ScrollView
             ref={scrollViewRef}
             contentContainerStyle={styles.chatContainer}
-            overScrollMode={'never'}
+            overScrollMode="never"
             showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
             onContentSizeChange={() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-    }}
+                scrollViewRef.current?.scrollToEnd({ animated: true });
+            }}
+            automaticallyAdjustContentInsets={true}
         >
             {chatList.map((chat, index) => (
-                <ChatBubble key={index} text={chat.message} sender={chat.sender} />
+                <ChatBubble key={index} text={chat.message} sender={chat.sender} link={""} />
             ))}
         </ScrollView>
     );
@@ -26,6 +28,7 @@ const ChatContainer = ({ chatList }: { chatList: ChatMessage[] }) => {
 const styles = StyleSheet.create({
     chatContainer: {
         paddingHorizontal: 10,
+        paddingVertical: 10,
     },
 });
 

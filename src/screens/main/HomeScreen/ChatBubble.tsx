@@ -1,15 +1,14 @@
 import React from "react";
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Linking, Pressable } from 'react-native';
 import COLORS from "../../../constants/colors";
-import Hyperlink from 'react-native-hyperlink'
-import openURL from "../../../components/openUrl";
 
 interface ChatBubbleProps {
     text: string;
     sender: "bot" | "client";
+    link: string | null;
 }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender }) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender, link }) => {
     const timeFormat = (date: Date) => {
         const hours = date.getHours();
         const minutes = date.getMinutes();
@@ -21,40 +20,33 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender }) => {
 
     const currentTime = timeFormat(new Date());
     const isBot = sender === 'bot';
-    const noticeCount = text.length;
-
     return isBot ? (
         <View style={[styles.rowContainer, styles.leftAlign]}>
-            {/* 말풍선 */}
             <View style={[styles.bubble, styles.botBubble]}>
-                <Text style={[styles.text, styles.botText]}>
+                <Text
+                    style={[styles.text, styles.botText]}
+                    onPress={() => {
+                        if (link && link.trim() !== "") {
+                            Linking.openURL(link);
+                        }
+                    }}
+                >
                     {text}
                 </Text>
             </View>
-
-            {/* 시간 */}
             <Text style={styles.time}>{currentTime}</Text>
         </View>
     ) : (
         <View style={[styles.rowContainer, styles.rightAlign]}>
-            {/* 시간 */}
             <Text style={styles.time}>{currentTime}</Text>
-
-            {/* 말풍선 */}
-            <View style={[styles.bubble, styles.clientBubble]}>
-                <Hyperlink
-                    linkStyle={{ color: 'blue' }}
-                    onPress={(url) => openURL(url)}
-                >
-                    <Text style={[styles.text, styles.clientText]}>
-                        {text}
-                    </Text>
-                </Hyperlink>
+            <View style={[styles.bubble, styles.clientBubble]}> 
+                <Text style={[styles.text, styles.clientText]}>
+                    {text}
+                </Text>
             </View>
         </View>
     );
 };
-
 
 const styles = StyleSheet.create({
     rowContainer: {
@@ -81,6 +73,8 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 14,
+        flexWrap: 'wrap',
+        flexDirection: 'row',
     },
     botText: {
         color: COLORS.BOT_TEXT,
