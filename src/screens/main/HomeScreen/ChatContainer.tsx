@@ -19,7 +19,7 @@ const ChatContainer = ({ chatList }: { chatList: ChatMessage[] }) => {
             automaticallyAdjustContentInsets={true}
         >
             {chatList.map((chat, index) => (
-                <ChatBubble key={index} text={chat.message} sender={chat.sender} link={""} />
+                <ChatBubble key={index} text={chat.message} sender={chat.sender} link={chat.link} />
             ))}
         </ScrollView>
     );

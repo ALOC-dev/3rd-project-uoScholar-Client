@@ -25,7 +25,7 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 export type ChatMessage = {
     message: string;
     sender: "bot" | "client";
-    link: string | null;
+    link: "";
 };
 
 const HomeScreen = () => {

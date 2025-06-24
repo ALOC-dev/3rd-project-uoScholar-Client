@@ -5,7 +5,7 @@ import COLORS from "../../../constants/colors";
 interface ChatBubbleProps {
     text: string;
     sender: "bot" | "client";
-    link: string | null;
+    link: "";
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender, link }) => {
@@ -26,8 +26,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender, link }) => {
                 <Text
                     style={[styles.text, styles.botText]}
                     onPress={() => {
-                        console.log("Link clicked:", link);
-                        if (link && link.trim() !== "") {
+                        if (link !== "") {
                             Linking.openURL(link);
                         }
                     }}
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 5,
-        elevation: 10,
+        elevation: 5,
     },
     clientBubble: {
         maxWidth: "60%",
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 5,
-        elevation: 10,
+        elevation: 5,
     },
     text: {
         fontSize: 14,
