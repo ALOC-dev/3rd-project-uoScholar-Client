@@ -27,7 +27,7 @@ const SearchInputScreen = () => {
 
       {/* 🔍 검색창 */}
       <TextInput
-        placeholder="검색어를 입력하세요..."
+        placeholder="검색어를 입력해주세요."
         style={styles.input}
         autoFocus
       />
@@ -42,12 +42,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   input: {
-    marginTop: 60, // 뒤로가기 버튼과 간격
+    marginTop: 40, // 뒤로가기 버튼과 간격
     height: 50,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 8,
     paddingHorizontal: 16,
+    backgroundColor: "#f0f0f0",
   },
   backButton: {
     position: "absolute",
