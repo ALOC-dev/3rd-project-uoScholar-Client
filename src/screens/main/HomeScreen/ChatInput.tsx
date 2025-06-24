@@ -14,7 +14,8 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
     const [text, setText] = useState("");
 
     const handleSend = async () => {
-        let currentText = text.trim(); // 공백 입력 방지
+        let currentText 
+        = text.trim(); // 공백 입력 방지
         if (currentText === "") return;
         setText(""); // 입력창 초기화
 
@@ -60,17 +61,6 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
             });
             return;
         }
-
-        // try {
-        //     const backendResponse = await getTextFromBackend();
-        //     onsend({ message: backendResponse, sender: "bot" });
-        // } catch (error: any) {
-        //     console.error("getTextFromBackend 실패:", error.message);
-        //     onsend({
-        //         message: "⚠️ 챗봇 응답 실패: 잠시 후 다시 시도해주세요.",
-        //         sender: "bot",
-        //     });
-        // }
     };
 
     return (
