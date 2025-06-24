@@ -40,6 +40,12 @@ const GeneralNotice = () => {
 
             subText: "컴퓨터과학부 | 2025-06-13 | 383",
           },
+          {
+            title:
+              "[학부] 2025학년도 2학기 학생미래설계학기 교과목 시행 안내(자기주도연구 등)",
+
+            subText: "컴퓨터과학부 | 2025-06-10 | 271",
+          },
         ];
         const dummyCardNotices = [
           {
