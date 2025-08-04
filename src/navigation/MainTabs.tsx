@@ -1,18 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-  Image,
-} from "react-native";
+import React from "react";
+import { Image, StyleSheet } from "react-native";
 import IMAGES from "../assets/index";
-
-import GeneralNotice from "../screens/main/SearchScreen/GeneralNotice";
-import AcademicNotice from "../screens/main/SearchScreen/AcademicNotice";
-import DepartmentNotice from "../screens/main/SearchScreen/DepartmentNotice";
+import NoticeScreen from "../screens/main/SearchScreen/NoticeScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -56,21 +46,21 @@ const MainTabs = ({ onTabChange }) => {
     >
       <Tab.Screen
         name="학과 공지"
-        component={DepartmentNotice}
+        component={() => <NoticeScreen noticeType="department" />}
         listeners={{
           focus: () => onTabChange("학과 공지"),
         }}
       />
       <Tab.Screen
         name="학사 공지"
-        component={AcademicNotice}
+        component={() => <NoticeScreen noticeType="academic" />}
         listeners={{
           focus: () => onTabChange("학사 공지"),
         }}
       />
       <Tab.Screen
         name="일반 공지"
-        component={GeneralNotice}
+        component={() => <NoticeScreen noticeType="general" />}
         listeners={{
           focus: () => onTabChange("일반 공지"),
         }}
@@ -80,21 +70,12 @@ const MainTabs = ({ onTabChange }) => {
 };
 
 const styles = StyleSheet.create({
-  tabScreen: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
   tabBarStyle: {
     backgroundColor: "#fff",
     height: 80,
   },
   tabBarLabelStyle: {
     fontWeight: "bold",
-  },
-  scrollContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    gap: 12,
   },
 });
 

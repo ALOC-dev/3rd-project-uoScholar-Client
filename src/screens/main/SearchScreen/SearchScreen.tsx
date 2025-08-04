@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
-import { RootStackParamList } from "../../../navigation/types";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DrawerParamList } from "../../../navigation/DrawerNavigator";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 import IMAGES from "../../../assets/index";
 import COLORS from "../../../constants/colors";
 import MainTabs from "../../../navigation/MainTabs";
-import { SearchStackParamList } from "../../../navigation/SearchStack"; // 올바른 경로 확인 필요
 
-type SearchScreenNavigationProp = NativeStackNavigationProp<
-  SearchStackParamList,
+type SearchScreenNavigationProp = DrawerNavigationProp<
+  DrawerParamList,
   "Search"
 >;
 
