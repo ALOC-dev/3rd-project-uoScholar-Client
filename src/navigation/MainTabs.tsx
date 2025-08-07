@@ -7,6 +7,10 @@ import NoticeScreen from "../screens/main/SearchScreen/NoticeScreen";
 const Tab = createBottomTabNavigator();
 
 const MainTabs = ({ onTabChange }) => {
+  const DepartmentNoticeScreen = () => <NoticeScreen noticeType="department" />;
+  const AcademicNoticeSCreen = () => <NoticeScreen noticeType="academic" />;
+  const GeneralNoticeScreen = () => <NoticeScreen noticeType="general" />;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -46,21 +50,21 @@ const MainTabs = ({ onTabChange }) => {
     >
       <Tab.Screen
         name="학과 공지"
-        component={() => <NoticeScreen noticeType="department" />}
+        component={DepartmentNoticeScreen}
         listeners={{
           focus: () => onTabChange("학과 공지"),
         }}
       />
       <Tab.Screen
         name="학사 공지"
-        component={() => <NoticeScreen noticeType="academic" />}
+        component={AcademicNoticeSCreen}
         listeners={{
           focus: () => onTabChange("학사 공지"),
         }}
       />
       <Tab.Screen
         name="일반 공지"
-        component={() => <NoticeScreen noticeType="general" />}
+        component={GeneralNoticeScreen}
         listeners={{
           focus: () => onTabChange("일반 공지"),
         }}
