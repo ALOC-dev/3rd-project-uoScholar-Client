@@ -65,7 +65,7 @@ const DrawerNavigator = () => {
         component={SearchScreen}
         options={{
           headerShown: false,
-          drawerLabel: "공지사항 검색",
+          drawerLabel: "공지사항",
         }}
       />
       <Drawer.Screen
