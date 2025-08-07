@@ -45,14 +45,6 @@ const DrawerNavigator = () => {
       }}
     >
       <Drawer.Screen
-        name="Register"
-        component={RegisterScreen}
-        options={{
-          headerShown: false,
-          drawerLabel: "회원가입",
-        }}
-      />
-      <Drawer.Screen
         name="Home"
         component={HomeScreen}
         options={{
@@ -66,6 +58,14 @@ const DrawerNavigator = () => {
         options={{
           headerShown: false,
           drawerLabel: "공지사항 검색",
+        }}
+      />
+      <Drawer.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{
+          headerShown: false,
+          drawerLabel: "마이페이지",
         }}
       />
       <Drawer.Screen
