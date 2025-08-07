@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import COLORS from "../../constants/colors";
 import { DrawerParamList } from "../../navigation/DrawerNavigator";
 
 interface UserInfo {
