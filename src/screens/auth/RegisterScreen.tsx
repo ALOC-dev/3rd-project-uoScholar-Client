@@ -172,10 +172,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         {/*뒤로가기 버튼 */}
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={IMAGES.BACKWARD} style={styles.backIcon} />
-        </TouchableOpacity>
-
+        {mode === "edit" && (
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={IMAGES.BACKWARD} style={styles.backIcon} />
+          </TouchableOpacity>
+        )}
         <View style={styles.headerContent}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
@@ -215,17 +216,21 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
 
           {/*학년 선택 드롭다운 */}
           {showGradePicker && (
-            <View style={styles.pickerContainer}>
-              {gradeOptions.map((grade, index) => (
+            <FlatList
+              data={gradeOptions}
+              style={styles.pickerContainer}
+              renderItem={({ item, index }) => (
                 <TouchableOpacity
                   key={index}
                   style={styles.pickerOption}
-                  onPress={() => handleGradeSelect(grade)}
+                  onPress={() => handleGradeSelect(item)}
                 >
-                  <Text style={styles.pickerOptionText}>{grade}</Text>
+                  <Text style={styles.pickerOptionText}>{item}</Text>
                 </TouchableOpacity>
-              ))}
-            </View>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              showsVerticalScrollIndicator={true}
+            />
           )}
         </View>
 
