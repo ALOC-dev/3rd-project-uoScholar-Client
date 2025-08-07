@@ -1,19 +1,23 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MainStack from "./MainStack";
+import DrawerNavigator from "./DrawerNavigator";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Main: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Navigator = () => {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name="MainStack"
-                component={MainStack}
-                options={{ headerShown: false }}
-            />
-        </Stack.Navigator>
-    );
-}
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Main"
+        component={DrawerNavigator}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 export default Navigator;
