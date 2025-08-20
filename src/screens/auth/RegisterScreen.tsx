@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  ScrollView,
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +19,7 @@ import IMAGES from "../../assets/index";
 interface UserInfo {
   name: string;
   grade: string;
+  college: string;
   department: string;
 }
 
@@ -27,6 +29,11 @@ interface RegisterScreenProps {
   mode?: "register" | "edit";
   initialUserInfo?: UserInfo;
   onSubmit?: (userInfo: UserInfo) => void;
+}
+
+interface College {
+  name: string;
+  departments: string[];
 }
 
 type RegisterScreenNavigationProp = DrawerNavigationProp<
@@ -44,23 +51,21 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
     initialUserInfo || {
       name: "",
       grade: "",
+      college: "",
       department: "",
     }
   );
 
   const [showGradePicker, setShowGradePicker] = useState(false);
-  const [showDepartmentPicker, setShowDepartmentPicker] = useState(false);
+  const [showCollegePicker, setShowCollegePicker] = useState(false);
+  const [selectedCollegeIndex, setSelectedCollegeIndex] = useState<
+    number | null
+  >(null);
   const [mode, setMode] = useState<"register" | "edit">("register");
   const [title, setTitle] = useState<string>("회원가입");
 
   // 학년 옵션
   const gradeOptions = ["1학년", "2학년", "3학년", "4학년", "졸업생"];
-
-  // 대학/학과 구조화
-  interface College {
-    name: string;
-    departments: string[];
-  }
 
   const colleges: College[] = [
     {
@@ -134,8 +139,6 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
     },
   ];
 
-  // 기존 UI 호환을 위한 flat 학과 옵션
-  const departmentOptions = colleges.flatMap((college) => college.departments);
   // userInfo 에서 name 속성만 text로 교체!
   const handleNameChange = (text: string) => {
     setUserInfo((prev) => ({ ...prev, name: text }));
@@ -146,9 +149,20 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
     setShowGradePicker(false);
   };
 
+  const handleCollegeSelect = (collegeName: string) => {
+    const index = colleges.findIndex((c) => c.name === collegeName);
+    setSelectedCollegeIndex(index >= 0 ? index : null);
+    setUserInfo((prev) => ({
+      ...prev,
+      college: collegeName,
+      department: "",
+    }));
+  };
+
   const handleDepartmentSelect = (department: string) => {
     setUserInfo((prev) => ({ ...prev, department }));
-    setShowDepartmentPicker(false);
+    setShowCollegePicker(false);
+    setSelectedCollegeIndex(null);
   };
   // 에러 처리
   const handleSubmit = () => {
@@ -170,7 +184,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
     } else {
       Alert.alert(
         mode === "register" ? "회원가입 완료" : "정보 수정 완료",
-        `이름: ${userInfo.name}\n학년: ${userInfo.grade}\n학과: ${userInfo.department}`,
+        `이름: ${userInfo.name}\n학년: ${userInfo.grade}\n대학: ${userInfo.college}\n학과: ${userInfo.department}`,
         [
           {
             text: "확인",
@@ -192,6 +206,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* 헤더 컨텐츠 */}
       <View style={styles.header}>
         {/*뒤로가기 버튼 */}
         {mode === "edit" && (
@@ -199,12 +214,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             <Image source={IMAGES.BACKWARD} style={styles.backIcon} />
           </TouchableOpacity>
         )}
+
         <View style={styles.headerContent}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
       </View>
-
+      {/* 폼 컨텐츠 */}
       <View style={styles.formContainer}>
         {/* 이름 입력 */}
         <View style={styles.inputContainer}>
@@ -261,7 +277,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
           <Text style={styles.label}>학과 *</Text>
           <TouchableOpacity
             style={styles.pickerButton}
-            onPress={() => setShowDepartmentPicker(!showDepartmentPicker)}
+            onPress={() => setShowCollegePicker(!showCollegePicker)}
           >
             <Text
               style={[
@@ -274,22 +290,48 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             <Text style={styles.arrow}>▼</Text>
           </TouchableOpacity>
 
-          {showDepartmentPicker && (
-            <FlatList
-              data={departmentOptions}
-              style={styles.pickerContainer}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.pickerOption}
-                  onPress={() => handleDepartmentSelect(item)}
-                >
-                  <Text style={styles.pickerOptionText}>{item}</Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-              showsVerticalScrollIndicator={true}
-            />
+          {showCollegePicker && (
+            <View style={[styles.pickerContainer, styles.dualPickerContainer]}>
+              <View style={styles.collegeListContainer}>
+                <ScrollView>
+                  {colleges.map((college, index) => (
+                    <TouchableOpacity
+                      key={college.name}
+                      style={[
+                        styles.pickerOption,
+                        selectedCollegeIndex === index && styles.selectedOption,
+                      ]}
+                      onPress={() => handleCollegeSelect(college.name)}
+                    >
+                      <Text style={styles.pickerOptionText}>
+                        {college.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+              <View style={styles.departmentListContainer}>
+                {selectedCollegeIndex !== null ? (
+                  <ScrollView>
+                    {colleges[selectedCollegeIndex].departments.map((dept) => (
+                      <TouchableOpacity
+                        key={dept}
+                        style={styles.pickerOption}
+                        onPress={() => handleDepartmentSelect(dept)}
+                      >
+                        <Text style={styles.pickerOptionText}>{dept}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                ) : (
+                  <View style={styles.emptyDepartmentContainer}>
+                    <Text style={styles.placeholderText}>
+                      왼쪽에서 대학을 선택하세요
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </View>
           )}
         </View>
 
@@ -388,15 +430,35 @@ const styles = StyleSheet.create({
     marginTop: 4,
     maxHeight: 220,
   },
+  dualPickerContainer: {
+    flexDirection: "row",
+  },
+  collegeListContainer: {
+    width: "50%",
+    borderRightWidth: 1,
+    borderRightColor: "#f0f0f0",
+  },
+  departmentListContainer: {
+    width: "50%",
+  },
   pickerOption: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
   },
+  selectedOption: {
+    backgroundColor: "#F2F7FF",
+  },
   pickerOptionText: {
     fontSize: 16,
     color: "#333",
+  },
+  emptyDepartmentContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 16,
   },
   submitButton: {
     backgroundColor: "#007AFF",
