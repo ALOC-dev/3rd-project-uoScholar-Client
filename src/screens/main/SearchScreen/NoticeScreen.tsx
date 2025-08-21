@@ -17,6 +17,7 @@ type NoticeScreenProps = {
 };
 
 const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
+  const ITEMS_PER_PAGE = 15;
   const isFocused = useIsFocused();
   const [blockNotices, setBlockNotices] = useState<NoticeItem[]>([]);
   const [cardNotices, setCardNotices] = useState<NoticeItem[]>([]);
@@ -38,15 +39,27 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       let apiResult;
       if (noticeType === "general") {
         console.log("General Keyword : ", keyword);
-        apiResult = await noticeApi.getGeneralNotices(0, 15, keyword);
+        apiResult = await noticeApi.getGeneralNotices(
+          0,
+          ITEMS_PER_PAGE,
+          keyword
+        );
         console.log("General API Result:", apiResult);
       } else if (noticeType === "academic") {
         console.log("Academic Keyword : ", keyword);
-        apiResult = await noticeApi.getAcademicNotices(0, 15, keyword);
+        apiResult = await noticeApi.getAcademicNotices(
+          0,
+          ITEMS_PER_PAGE,
+          keyword
+        );
         console.log("Academic API Result:", apiResult);
       } else if (noticeType === "department") {
         console.log("Department Keyword : ", keyword);
-        apiResult = await noticeApi.getDepartmentNotices(0, 15, keyword);
+        apiResult = await noticeApi.getDepartmentNotices(
+          0,
+          ITEMS_PER_PAGE,
+          keyword
+        );
         console.log("Department API Result:", apiResult);
       }
 
@@ -89,11 +102,23 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
     try {
       let apiResult;
       if (noticeType === "general") {
-        apiResult = await noticeApi.getGeneralNotices(nextPage, 15, keyword);
+        apiResult = await noticeApi.getGeneralNotices(
+          nextPage,
+          ITEMS_PER_PAGE,
+          keyword
+        );
       } else if (noticeType === "academic") {
-        apiResult = await noticeApi.getAcademicNotices(nextPage, 15, keyword);
+        apiResult = await noticeApi.getAcademicNotices(
+          nextPage,
+          ITEMS_PER_PAGE,
+          keyword
+        );
       } else if (noticeType === "department") {
-        apiResult = await noticeApi.getDepartmentNotices(nextPage, 15, keyword);
+        apiResult = await noticeApi.getDepartmentNotices(
+          nextPage,
+          ITEMS_PER_PAGE,
+          keyword
+        );
       }
 
       const notices = apiResult?.data || apiResult?.content || [];
