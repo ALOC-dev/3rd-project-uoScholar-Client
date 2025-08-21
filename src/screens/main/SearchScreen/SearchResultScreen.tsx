@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useNavigation, DrawerActions, useRoute, RouteProp } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../../../navigation/DrawerNavigator";
 import IMAGES from "../../../assets/index";
@@ -18,6 +18,8 @@ const SearchResultScreen = () => {
   const [headerTitle, setHeaderTitle] = useState<string>("Search Result");
   const navigation = useNavigation<SearchScreenNavigationProp>();
   const insets = useSafeAreaInsets();
+  const route = useRoute<RouteProp<DrawerParamList, "SearchResult">>();
+  const { keyword } = route.params;
 
   return (
     <View style={styles.root}>
@@ -47,7 +49,7 @@ const SearchResultScreen = () => {
       </View>
 
       <View style={styles.mainContainer}>
-        <MainTabs onTabChange={setHeaderTitle} />
+        <MainTabs onTabChange={setHeaderTitle} keyword={keyword} />
       </View>
     </View>
   );
