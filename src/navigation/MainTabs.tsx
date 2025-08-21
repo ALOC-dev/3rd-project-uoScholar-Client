@@ -6,10 +6,10 @@ import NoticeScreen from "../screens/main/SearchScreen/NoticeScreen";
 
 const Tab = createBottomTabNavigator();
 
-const MainTabs = ({ onTabChange }) => {
-  const DepartmentNoticeScreen = () => <NoticeScreen noticeType="department" />;
-  const AcademicNoticeSCreen = () => <NoticeScreen noticeType="academic" />;
-  const GeneralNoticeScreen = () => <NoticeScreen noticeType="general" />;
+const MainTabs = ({ onTabChange, keyword }) => {
+  const DepartmentNoticeScreen = () => <NoticeScreen noticeType="department" keyword={keyword} />;
+  const AcademicNoticeSCreen = () => <NoticeScreen noticeType="academic" keyword={keyword} />;
+  const GeneralNoticeScreen = () => <NoticeScreen noticeType="general" keyword={keyword} />;
 
   return (
     <Tab.Navigator
