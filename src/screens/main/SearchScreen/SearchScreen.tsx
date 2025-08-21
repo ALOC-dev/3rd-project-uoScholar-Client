@@ -60,7 +60,7 @@ const SearchScreen = () => {
 
       {/* Body */}
       <View style={styles.mainContainer}>
-        <MainTabs onTabChange={setHeaderTitle} />
+        <MainTabs onTabChange={setHeaderTitle} keyword={undefined} />
       </View>
     </View>
   );
