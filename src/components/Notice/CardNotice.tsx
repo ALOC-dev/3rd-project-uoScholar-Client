@@ -16,10 +16,9 @@ type NoticeItem = {
 
 const CardNotice = ({ notice }: { notice: NoticeItem }) => {
   const handlePress = async () => {
-    const supported = await Linking.canOpenURL(notice.link);
-    if (supported) {
+    try {
       await Linking.openURL(notice.link);
-    } else {
+    } catch (err) {
       Alert.alert("유효하지 않은 링크입니다.", notice.link);
     }
   };
