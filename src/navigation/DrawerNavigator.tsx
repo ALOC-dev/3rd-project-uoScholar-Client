@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { HomeScreen, SearchScreen } from "../screens/index";
@@ -6,6 +6,8 @@ import RegisterScreen from "../screens/auth/RegisterScreen";
 import SearchInputScreen from "../screens/main/SearchScreen/SearchInputScreen";
 import SearchResultScreen from "../screens/main/SearchScreen/SearchResultScreen";
 import COLORS from "../constants/colors";
+import { useCollegeStore } from "../store/use-college-store";
+import LoadingScreen from "../components/LoadingScreen";
 
 export type DrawerParamList = {
   Register: undefined;
@@ -18,9 +20,57 @@ export type DrawerParamList = {
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const DrawerNavigator = () => {
+  const { selectedCollegeCodes } = useCollegeStore();
+  const [hasHydrated, setHasHydrated] = useState(false);
+  const [initialRoute, setInitialRoute] = useState<keyof DrawerParamList | undefined>(undefined);
+
+  useEffect(() => {
+    const unsubscribe = useCollegeStore.persist.onFinishHydration(() => {
+      console.log('DrawerNavigator - hydration finished');
+      setHasHydrated(true);
+    });
+
+    // 이미 hydrated된 상태라면 즉시 true로 설정
+    if (useCollegeStore.persist.hasHydrated()) {
+      console.log('DrawerNavigator - already hydrated');
+      setHasHydrated(true);
+    }
+
+    // 3초 후에도 hydration이 완료되지 않으면 강제로 완료 처리
+    const timeout = setTimeout(() => {
+      console.log('DrawerNavigator - hydration timeout, forcing completion');
+      setHasHydrated(true);
+    }, 3000);
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  useEffect(() => {
+    console.log('DrawerNavigator - hasHydrated:', hasHydrated);
+    console.log('DrawerNavigator - selectedCollegeCodes:', selectedCollegeCodes);
+    
+    if (hasHydrated) {
+      // 선택된 대학이 있으면 Home, 없으면 Register를 초기 라우트로 설정
+      const route: keyof DrawerParamList = selectedCollegeCodes.length > 0 ? "Home" : "Register";
+      console.log('DrawerNavigator - setting initial route:', route);
+      setInitialRoute(route);
+    }
+  }, [hasHydrated, selectedCollegeCodes.length]);
+
+  console.log('DrawerNavigator - render state:', { hasHydrated, initialRoute, selectedCollegeCodesLength: selectedCollegeCodes.length });
+
+  // 아직 hydration이 완료되지 않았거나 초기 라우트가 결정되지 않았으면 로딩 화면 표시
+  if (!hasHydrated || !initialRoute) {
+    console.log('DrawerNavigator - showing loading screen');
+    return <LoadingScreen />;
+  }
+
   return (
     <Drawer.Navigator
-      initialRouteName="Register"
+      initialRouteName={initialRoute}
       screenOptions={{
         drawerPosition: "left",
         drawerType: "slide",
