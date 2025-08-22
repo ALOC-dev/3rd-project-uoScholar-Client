@@ -7,7 +7,7 @@ import {
   Image,
 } from "react-native";
 import IMAGES from "../../assets";
-import { sendTextToBackend } from "../../api/Api";
+import { chatApi } from "../../api/Api";
 
 export type ChatMessage = {
   message: string;
@@ -27,39 +27,13 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
     onsend({ message: currentText, sender: "client", link: "" });
 
     try {
-      const sentTextResponse = await sendTextToBackend(currentText);
-
-      if (sentTextResponse.length === 0) {
-        onsend({
-          message: "원하시는 정보를 찾을 수 없습니다.",
-          sender: "bot",
-          link: "",
-        });
-        return;
-      }
-
-      for (let i = 0; i < sentTextResponse.length; i++) {
-        let final_text = "";
-
-        final_text += "제목: ";
-        final_text += sentTextResponse[i].title;
-        final_text += "\n";
-        final_text += "부서: ";
-        final_text += sentTextResponse[i].department;
-        final_text += "\n";
-        final_text += "시간: ";
-        final_text += sentTextResponse[i].posted_date;
-
-        onsend({
-          message: final_text,
-          sender: "bot",
-          link: sentTextResponse[i].link,
-        });
-      }
+      const botReply = await chatApi.sendMessage(currentText);
+      onsend({ message: botReply, sender: "bot", link: "" });
     } catch (error) {
-      console.error("sendTextToBackend 실패:", error.message);
+      const errorMessage = error instanceof Error ? error.message : "메시지 전송 중 오류가 발생했습니다.";
+      console.error("chatApi.sendMessage 실패:", errorMessage);
       onsend({
-        message: "❌ 메시지 전송 실패: 서버에 도달하지 못했습니다.",
+        message: `❌ 메시지 전송 실패: ${errorMessage}`,
         sender: "bot",
         link: "",
       });
