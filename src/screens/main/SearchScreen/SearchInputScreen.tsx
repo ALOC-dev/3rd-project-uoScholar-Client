@@ -71,8 +71,12 @@ const SearchInputScreen = () => {
       <View style={styles.popularContainer}>
         <Text style={styles.popularTitle}>인기 키워드</Text>
         <View style={styles.keywordList}>
-          {keywords.map((keyword, idx) => (
-            <TouchableOpacity key={idx} style={styles.keywordBadge}>
+          {Object.values(keywords).map((keyword, idx) => (
+            <TouchableOpacity
+              key={idx}
+              style={styles.keywordBadge}
+              onPress={() => {setSearchText(keyword); handleSend();}}
+            >
               <Text style={styles.keywordText}>{keyword}</Text>
             </TouchableOpacity>
           ))}
