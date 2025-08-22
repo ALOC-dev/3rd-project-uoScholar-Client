@@ -3,17 +3,16 @@ import {
   Image,
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
-  FlatList,
-  ScrollView,
   Alert,
   AppState,
   InteractionManager,
 } from "react-native";
 import { useNavigation, DrawerActions, useIsFocused } from "@react-navigation/native";
+import useCollege from "../../hooks/use-college";
+import { College, COLLEGE_LABELS } from "../../types/college";
+import { useCollegeHydration } from "../../store/use-college-store";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../../navigation/DrawerNavigator";
 import IMAGES from "../../assets/index";
@@ -31,9 +30,7 @@ interface RegisterScreenProps {
   onSubmit?: (userInfo: UserInfo) => void;
 }
 
-interface College {
-  name: string;
-}
+// labels moved to shared type
 
 type RegisterScreenNavigationProp = DrawerNavigationProp<
   DrawerParamList,
@@ -55,6 +52,19 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const [mode, setMode] = useState<"register" | "edit">("register");
   const [title, setTitle] = useState<string>("회원가입");
   const insets = useSafeAreaInsets();
+  const { selectedColleges, toggleCollege } = useCollege();
+  const { hasHydrated } = useCollegeHydration();
+
+  // UI용 목록 (코드 + 라벨)
+  const colleges = Object.values(College).map((code) => ({
+    code,
+    label: COLLEGE_LABELS[code as College],
+  }));
+
+  // 선택 상태가 바뀔 때 userInfo.colleges를 코드 문자열 배열로 동기화
+  useEffect(() => {
+    setUserInfo((prev) => ({ ...prev, colleges: Array.from(selectedColleges) }));
+  }, [selectedColleges]);
 
   const appStateRef = useRef(AppState.currentState);
   const [isAppActive, setIsAppActive] = useState(true);
@@ -90,53 +100,29 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
     [isFocused, isAppActive]
   );
 
-  const colleges: College[] = [
-    { name: "정경대학" },
-    { name: "경영대학" },
-    { name: "공과대학" },
-    { name: "인문대학" },
-    { name: "자연과학대학" },
-    { name: "도시과학대학" },
-    { name: "예술체육대학" },
-    { name: "자유융합대학" },
-  ];
-
-  const handleCollegeToggle = (collegeName: string) => {
-    setUserInfo((prev) => {
-      const isSelected = prev.colleges.includes(collegeName);
-      if (isSelected) {
-        return {
-          ...prev,
-          colleges: prev.colleges.filter(college => college !== collegeName)
-        };
-      } else {
-        return {
-          ...prev,
-          colleges: [...prev.colleges, collegeName]
-        };
-      }
-    });
+  const handleCollegeToggle = (code: College) => {
+    toggleCollege(code);
   };
 
   const handleSubmit = () => {
-    if (userInfo.colleges.length === 0) {
+    if (selectedColleges.size === 0) {
       showAlertIfPossible("오류", "적어도 하나의 대학을 선택해주세요.");
       return;
     }
 
     if (onSubmit) {
-      onSubmit(userInfo);
+      onSubmit({ ...userInfo, colleges: Array.from(selectedColleges) });
     } else {
       showAlertIfPossible(
         mode === "register" ? "회원가입 완료" : "정보 수정 완료",
-        `선택된 대학: ${userInfo.colleges.join(", ")}`,
+        `선택된 대학: ${Array.from(selectedColleges).map(c => COLLEGE_LABELS[c as College]).join(", ")}`,
         [
           {
             text: "확인",
             onPress: () => {
               console.log(
                 `${mode === "register" ? "회원가입" : "정보 수정"} 정보:`,
-                userInfo
+                { ...userInfo, colleges: Array.from(selectedColleges) }
               );
 
               // title이 '회원가입'일 때만 Home으로 이동
@@ -152,6 +138,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
       );
     }
   };
+
+  // 스토어가 복원(hydrate)된 뒤에, 선택된 대학이 존재하면 모드를 edit로 변경
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (selectedColleges.size > 0 && title === "회원가입") {
+      setMode("edit");
+      setTitle("정보 수정");
+    }
+  }, [hasHydrated, selectedColleges.size, title]);
 
   return (
     <View style={styles.container}>
@@ -191,16 +186,16 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             <View style={styles.checkboxContainer}>
               {colleges.map((college) => (
                 <TouchableOpacity
-                  key={college.name}
+                  key={college.code}
                   style={styles.checkboxRow}
-                  onPress={() => handleCollegeToggle(college.name)}
+                  onPress={() => handleCollegeToggle(college.code as College)}
                 >
                   <View style={styles.checkbox}>
-                    {userInfo.colleges.includes(college.name) && (
+                    {selectedColleges.has(college.code as College) && (
                       <Text style={styles.checkmark}>✓</Text>
                     )}
                   </View>
-                  <Text style={styles.checkboxLabel}>{college.name}</Text>
+                  <Text style={styles.checkboxLabel}>{college.label}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -253,6 +248,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: "bold",
+    color: '#333',
     position: "absolute",
   },
   tabIcon: {
@@ -262,6 +258,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: "bold",
+    color: '#333',
   },
   subtitle: {
     fontSize: 16,
@@ -286,16 +283,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   checkboxContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#EAEAEA',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 2,
     overflow: 'hidden',
   },
   checkboxRow: {
@@ -304,21 +303,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#EAEAEA',
   },
   checkbox: {
     width: 24,
     height: 24,
     borderWidth: 2,
-    borderColor: '#007AFF',
+    borderColor: '#333',
     borderRadius: 6,
     marginRight: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#FFFFFF',
   },
   checkmark: {
-    color: '#007AFF',
+    color: '#333',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -328,22 +327,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   submitButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#333',
     borderRadius: 12,
     paddingVertical: 18,
     alignItems: 'center',
     marginTop: 24,
-    shadowColor: '#007AFF',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.1,
     shadowRadius: 8,
-    elevation: 5,
+    elevation: 3,
   },
   submitButtonText: {
-    color: 'white',
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: '700',
   },
@@ -353,7 +352,7 @@ const styles = StyleSheet.create({
   },
   noticeText: {
     fontSize: 25,
-    color: "#666",
+    color: "#333",
     fontWeight: 'bold',
   },
   subNoticeText: {
