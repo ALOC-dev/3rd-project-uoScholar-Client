@@ -1,7 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient, handleApiError } from "./chatApi";
 import { NoticeCategory } from '../types/college';
-import { useCollege } from '../hooks/use-college';
 
 export interface NoticeApiParams {
   exact?: boolean;
