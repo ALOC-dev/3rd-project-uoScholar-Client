@@ -10,6 +10,7 @@ import { useCollege } from "../../../hooks/use-college";
 type NoticeItem = {
   title: string;
   subText: string;
+  link: string;
 };
 
 type NoticeScreenProps = {
@@ -68,6 +69,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       const mappedHotNotices = hotNotices.map((item) => ({
         title: item.title,
         subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount || ""}`,
+        link: item.link,
       }));
       setCardNotices(mappedHotNotices);
 
@@ -76,6 +78,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       const mappedNotices = notices.map((item) => ({
         title: item.title,
         subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount || ""}`,
+        link: item.link,
       }));
 
       setBlockNotices(mappedNotices);
@@ -115,6 +118,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       const mappedNotices = notices.map((item) => ({
         title: item.title,
         subText: `${item.department} | ${item.date || item.postedDate} | ${item.views || ""}`,
+        link: item.link,
       }));
 
       setBlockNotices((prev) => [...prev, ...mappedNotices]);

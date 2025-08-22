@@ -1,17 +1,38 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+  Alert,
+} from "react-native";
 
 type NoticeItem = {
   title: string;
   subText: string;
+  link: string;
 };
 
-const BlockNotice = ({ notice }: { notice: NoticeItem }) => (
-  <View style={styles.noticeBlock}>
-    <Text style={styles.noticeText}>{notice.title}</Text>
-    <Text style={styles.noticeSubText}>{notice.subText}</Text>
-  </View>
-);
+const BlockNotice = ({ notice }: { notice: NoticeItem }) => {
+  const handlePress = async () => {
+    const supported = await Linking.canOpenURL(notice.link);
+    if (supported) {
+      await Linking.openURL(notice.link);
+    } else {
+      Alert.alert("유효하지 않은 링크입니다.", notice.link);
+    }
+  };
+
+  return(
+    <TouchableOpacity onPress={handlePress}>
+      <View style={styles.noticeBlock}>
+        <Text style={styles.noticeText}>{notice.title}</Text>
+        <Text style={styles.noticeSubText}>{notice.subText}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   noticeBlock: {
