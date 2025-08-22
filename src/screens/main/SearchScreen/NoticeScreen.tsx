@@ -5,7 +5,7 @@ import CardNotice from "../../../components/Notice/CardNotice";
 import { noticeApi } from "../../../api/Api";
 import COLORS from "../../../constants/colors";
 import { useIsFocused } from "@react-navigation/native";
-import { useCollege } from "../../../hooks/use-college"; // ✅ 추가
+import { useCollege } from "../../../hooks/use-college";
 
 type NoticeItem = {
   title: string;
@@ -20,7 +20,7 @@ type NoticeScreenProps = {
 const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
   const ITEMS_PER_PAGE = 15;
   const isFocused = useIsFocused();
-  const { selectedColleges } = useCollege(); // ✅ 추가
+  const { selectedColleges } = useCollege();
   const [blockNotices, setBlockNotices] = useState<NoticeItem[]>([]);
   const [cardNotices, setCardNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       } else if (noticeType === "department") {
         console.log("Department Keyword : ", keyword);
         apiResult = await noticeApi.getDepartmentNotices(
-          Array.from(selectedColleges), // ✅ 전달
+          Array.from(selectedColleges),
           0,
           ITEMS_PER_PAGE,
           keyword
@@ -58,14 +58,24 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       console.log("API Result structure:", {
         data: apiResult?.data,
         content: apiResult?.content,
+        hot: apiResult?.hot,
         totalPages: apiResult?.totalPages,
         currentPage: apiResult?.currentPage,
       });
 
+      // ✅ hot 공지사항 처리 (page 0일 때만)
+      const hotNotices = apiResult?.hot || [];
+      const mappedHotNotices = hotNotices.map((item) => ({
+        title: item.title,
+        subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount || ""}`,
+      }));
+      setCardNotices(mappedHotNotices);
+
+      // ✅ 일반 공지사항 처리
       const notices = apiResult?.data || apiResult?.content || [];
       const mappedNotices = notices.map((item) => ({
         title: item.title,
-        subText: `${item.department} | ${item.date || item.postedDate} | ${item.views || ""}`,
+        subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount || ""}`,
       }));
 
       setBlockNotices(mappedNotices);
@@ -76,7 +86,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
     } finally {
       setLoading(false);
     }
-  }, [noticeType, keyword, selectedColleges]); // ✅ selectedColleges 의존성 추가
+  }, [noticeType, keyword, selectedColleges]);
 
   // ✅ 추가 데이터 로드
   const loadMoreData = useCallback(async () => {
@@ -93,13 +103,14 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
         apiResult = await noticeApi.getAcademicNotices(nextPage, ITEMS_PER_PAGE, keyword);
       } else if (noticeType === "department") {
         apiResult = await noticeApi.getDepartmentNotices(
-          Array.from(selectedColleges), // ✅ 전달
+          Array.from(selectedColleges),
           nextPage,
           ITEMS_PER_PAGE,
           keyword
         );
       }
 
+      // ✅ 추가 페이지에서는 hot이 없으므로 일반 공지만 처리
       const notices = apiResult?.data || apiResult?.content || [];
       const mappedNotices = notices.map((item) => ({
         title: item.title,
@@ -114,7 +125,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
     } finally {
       setLoadingMore(false);
     }
-  }, [currentPage, hasMore, loadingMore, noticeType, keyword, selectedColleges]); // ✅ selectedColleges 추가
+  }, [currentPage, hasMore, loadingMore, noticeType, keyword, selectedColleges]);
 
   // ✅ 스크롤 이벤트 핸들러
   const handleScroll = useCallback(
@@ -147,9 +158,11 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
         <ActivityIndicator size="large" color="gray" />
       ) : (
         <>
+          {/* ✅ Hot 공지사항들을 CardNotice로 렌더링 */}
           {cardNotices.map((notice, idx) => (
             <CardNotice key={`card-${idx}`} notice={notice} />
           ))}
+          {/* ✅ 일반 공지사항들을 BlockNotice로 렌더링 */}
           {blockNotices.map((notice, idx) => (
             <BlockNotice key={`block-${idx}`} notice={notice} />
           ))}
