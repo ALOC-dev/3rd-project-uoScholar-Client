@@ -156,7 +156,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   return (
     <View style={styles.container}>
       {mode === "edit" && (
-        <View style={{ paddingTop: insets.top }}>
+        <View style={{ paddingTop: insets.top + 15 }}>
           <View style={styles.topContainer}>
             {/* 왼쪽 TabIcon */}
             <TouchableOpacity
