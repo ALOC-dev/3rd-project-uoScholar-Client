@@ -122,8 +122,8 @@ export const noticeApi = {
    */
   getDepartmentNotices: async (
     selectedColleges: NoticeCategory[],
-    page: number = 1,
-    size: number = 20,
+    page: number = 0,
+    size: number = 15,
     keyword?: string
   ): Promise<NoticeApiResponse> => {
     return noticeApi.searchNotices({
