@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -11,15 +11,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../../../navigation/DrawerNavigator";
+import { keywordApi } from '../../../api/Api';
 import IMAGES from "../../../assets/index";
-
-const popularKeywords = [
-  "졸업 요건",
-  "현장실습",
-  "AI 특강",
-  "교환학생",
-  "장학금",
-];
 
 type SearchScreenNavigationProp = DrawerNavigationProp<
   DrawerParamList,
@@ -30,6 +23,19 @@ const SearchInputScreen = () => {
   const navigation = useNavigation<SearchScreenNavigationProp>();
   const insets = useSafeAreaInsets();
   const [searchText, setSearchText] = useState("");
+  const [keywords, setKeywords] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchKeywords = async () => {
+      try {
+        const result = await keywordApi.getKeywords();
+        setKeywords(result);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchKeywords();
+  }, [])
 
   const handleSend = () => {
     navigation.navigate("SearchResult", { keyword: searchText });
@@ -65,7 +71,7 @@ const SearchInputScreen = () => {
       <View style={styles.popularContainer}>
         <Text style={styles.popularTitle}>인기 키워드</Text>
         <View style={styles.keywordList}>
-          {popularKeywords.map((keyword, idx) => (
+          {keywords.map((keyword, idx) => (
             <TouchableOpacity key={idx} style={styles.keywordBadge}>
               <Text style={styles.keywordText}>{keyword}</Text>
             </TouchableOpacity>

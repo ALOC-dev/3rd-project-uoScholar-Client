@@ -15,8 +15,11 @@ export {
 // Re-export notice API and types
 export {
   noticeApi,
-  NoticeCategory,
   NoticeApiParams,
   NoticeItem,
   NoticeApiResponse,
 } from "./noticeApi";
+
+export {
+  keywordApi
+} from './keywordApi';
