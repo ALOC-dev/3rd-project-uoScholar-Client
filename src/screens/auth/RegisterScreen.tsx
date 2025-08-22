@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Image,
   View,
@@ -10,8 +10,10 @@ import {
   FlatList,
   ScrollView,
   Alert,
+  AppState,
+  InteractionManager,
 } from "react-native";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useNavigation, DrawerActions, useIsFocused } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { DrawerParamList } from "../../navigation/DrawerNavigator";
 import IMAGES from "../../assets/index";
@@ -43,6 +45,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   onSubmit,
 }) => {
   const navigation = useNavigation<RegisterScreenNavigationProp>();
+  const isFocused = useIsFocused();
   const [userInfo, setUserInfo] = useState<UserInfo>(
     initialUserInfo || {
       colleges: [],
@@ -52,6 +55,40 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const [mode, setMode] = useState<"register" | "edit">("register");
   const [title, setTitle] = useState<string>("회원가입");
   const insets = useSafeAreaInsets();
+
+  const appStateRef = useRef(AppState.currentState);
+  const [isAppActive, setIsAppActive] = useState(true);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextState) => {
+      appStateRef.current = nextState;
+      setIsAppActive(nextState === "active");
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const showAlertIfPossible = useCallback(
+    (
+      alertTitle: string,
+      alertMessage?: string,
+      alertButtons?: Array<{ text: string; onPress?: () => void }>
+    ) => {
+      if (!isFocused || !isAppActive) {
+        console.warn(
+          "Skip Alert: screen not focused or app not active (Android activity may be detached)."
+        );
+        return;
+      }
+
+      InteractionManager.runAfterInteractions(() => {
+        Alert.alert(alertTitle, alertMessage, alertButtons);
+      });
+    },
+    [isFocused, isAppActive]
+  );
 
   const colleges: College[] = [
     { name: "정경대학" },
@@ -83,14 +120,14 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
 
   const handleSubmit = () => {
     if (userInfo.colleges.length === 0) {
-      Alert.alert("오류", "적어도 하나의 대학을 선택해주세요.");
+      showAlertIfPossible("오류", "적어도 하나의 대학을 선택해주세요.");
       return;
     }
 
     if (onSubmit) {
       onSubmit(userInfo);
     } else {
-      Alert.alert(
+      showAlertIfPossible(
         mode === "register" ? "회원가입 완료" : "정보 수정 완료",
         `선택된 대학: ${userInfo.colleges.join(", ")}`,
         [
