@@ -68,7 +68,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       const hotNotices = apiResult?.hot || [];
       const mappedHotNotices = hotNotices.map((item) => ({
         title: item.title,
-        subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount || ""}`,
+        subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount}`,
         link: item.link,
       }));
       setCardNotices(mappedHotNotices);
@@ -77,7 +77,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       const notices = apiResult?.data || apiResult?.content || [];
       const mappedNotices = notices.map((item) => ({
         title: item.title,
-        subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount || ""}`,
+        subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount}`,
         link: item.link,
       }));
 
