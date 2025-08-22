@@ -1,12 +1,7 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { apiClient, handleApiError } from "./chatApi";
-
-// Notice Types
-export type NoticeCategory =
-  | "ACADEMIC"
-  | "GENERAL"
-  | "COLLEGE_ENGINEERING"
-  | "COLLEGE_SOCIAL_SCIENCES";
+import { NoticeCategory } from '../types/college';
+import { useCollege } from '../hooks/use-college';
 
 export interface NoticeApiParams {
   exact?: boolean;
@@ -126,13 +121,14 @@ export const noticeApi = {
    * 단과대 공지 조회 (공과대학, 사회과학대학)
    */
   getDepartmentNotices: async (
+    selectedColleges: NoticeCategory[],
     page: number = 1,
     size: number = 20,
     keyword?: string
   ): Promise<NoticeApiResponse> => {
     return noticeApi.searchNotices({
       exact: true,
-      category: ["COLLEGE_ENGINEERING", "COLLEGE_SOCIAL_SCIENCES"],
+      category: [...selectedColleges],
       page,
       size,
       keyword,
