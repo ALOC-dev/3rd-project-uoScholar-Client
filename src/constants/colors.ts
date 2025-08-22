@@ -1,5 +1,5 @@
 const COLORS = {
-  // background #BACEE0
+  // background
   HEADER_BACKGROUND: '#FFFFFF',
   MAIN_BACKGROUND: '#FFFFFF',
   FOOTER_BACKGROUND: '#FFFFFF',
