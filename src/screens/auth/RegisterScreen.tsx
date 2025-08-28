@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   AppState,
   InteractionManager,
 } from "react-native";
@@ -22,6 +21,7 @@ import { DrawerParamList } from "../../navigation/DrawerNavigator";
 import IMAGES from "../../assets/index";
 import COLORS from "../../constants/colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import CustomAlert from "../../components/CustomAlert";
 
 interface UserInfo {
   colleges: string[];
@@ -59,6 +59,14 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const { selectedColleges, toggleCollege } = useCollege();
   const { hasHydrated } = useCollegeHydration();
 
+  // 커스텀 알림창 상태
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertButtons, setAlertButtons] = useState<
+    Array<{ text: string; onPress?: () => void }>
+  >([]);
+
   // UI용 목록 (코드 + 라벨)
   const colleges = Object.values(College).map((code) => ({
     code,
@@ -89,9 +97,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
 
   const showAlertIfPossible = useCallback(
     (
-      alertTitle: string,
-      alertMessage?: string,
-      alertButtons?: Array<{ text: string; onPress?: () => void }>
+      title: string,
+      message?: string,
+      buttons?: Array<{ text: string; onPress?: () => void }>
     ) => {
       if (!isFocused || !isAppActive) {
         console.warn(
@@ -101,7 +109,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
       }
 
       InteractionManager.runAfterInteractions(() => {
-        Alert.alert(alertTitle, alertMessage, alertButtons);
+        setAlertTitle(title);
+        setAlertMessage(message || "");
+        setAlertButtons(buttons || [{ text: "확인" }]);
+        setAlertVisible(true);
       });
     },
     [isFocused, isAppActive]
@@ -235,6 +246,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* 커스텀 알림창 */}
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        buttons={alertButtons}
+        onClose={() => setAlertVisible(false)}
+      />
     </View>
   );
 };
