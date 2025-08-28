@@ -34,18 +34,19 @@ const SearchResultScreen = () => {
       <View style={styles.topContainer}>
         <TouchableOpacity
           onPress={() => navigation.navigate("Search")}
-          style={styles.backButton}
+          style={styles.backButtonContainer}
         >
-          <Image source={IMAGES.BACKWARD} style={styles.backButton} />
+          <Image source={IMAGES.BACKWARD} style={styles.backButtonImage} />
         </TouchableOpacity>
+        
+        <Text style={styles.title}>{headerTitle}</Text>
+        
         <TouchableOpacity
           style={styles.srchBtn}
           onPress={() => navigation.navigate("SearchInput")}
         >
           <Image source={IMAGES.SEARCHICON} style={styles.tabBtnImg} />
         </TouchableOpacity>
-
-        <Text style={styles.title}>{headerTitle}</Text>
       </View>
 
       <View style={styles.mainContainer}>
@@ -63,32 +64,36 @@ const styles = StyleSheet.create({
   topContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     height: 50,
     zIndex: 100,
     backgroundColor: COLORS.HEADER_BACKGROUND,
+    paddingHorizontal: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    position: "absolute",
+    flex: 1,
+    textAlign: "center",
   },
-  tabBtn: {
-    position: "absolute",
-    left: 10,
+  backButtonContainer: {
     padding: 10,
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  backButton: {
-    left: -85,
-    marginRight: 8,
-    width: 30,
-    height: 30, // ⬅ 여기서 기존 100을 줄임
+  backButtonImage: {
+    width: 24,
+    height: 24,
     resizeMode: "contain",
   },
   srchBtn: {
-    position: "absolute",
-    right: 10,
     padding: 10,
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   tabBtnImg: {
     width: 25,
