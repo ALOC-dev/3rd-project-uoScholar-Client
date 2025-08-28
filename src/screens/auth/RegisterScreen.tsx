@@ -142,10 +142,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             {
               text: "확인",
               onPress: () => {
-                console.log("회원가입 완료:", {
-                  ...userInfo,
-                  colleges: Array.from(selectedColleges),
-                });
+
                 setMode("edit");
                 setTitle("정보 수정");
                 navigation.navigate("Home");
@@ -164,10 +161,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             {
               text: "확인",
               onPress: () => {
-                console.log("정보 수정 완료:", {
-                  ...userInfo,
-                  colleges: Array.from(selectedColleges),
-                });
+
               },
             },
           ]

@@ -32,8 +32,6 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
 
   // ✅ 초기 데이터 로드
   const loadInitialData = useCallback(async () => {
-    console.log("loadInitialData called", { isFocused, noticeType, keyword });
-
     setLoading(true);
     setCurrentPage(0);
     setHasMore(true);
@@ -41,13 +39,10 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
     try {
       let apiResult;
       if (noticeType === "general") {
-        console.log("General Keyword : ", keyword);
         apiResult = await noticeApi.getGeneralNotices(0, ITEMS_PER_PAGE, keyword);
       } else if (noticeType === "academic") {
-        console.log("Academic Keyword : ", keyword);
         apiResult = await noticeApi.getAcademicNotices(0, ITEMS_PER_PAGE, keyword);
       } else if (noticeType === "department") {
-        console.log("Department Keyword : ", keyword);
         apiResult = await noticeApi.getDepartmentNotices(
           Array.from(selectedColleges),
           0,
@@ -56,13 +51,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
         );
       }
 
-      console.log("API Result structure:", {
-        data: apiResult?.data,
-        content: apiResult?.content,
-        hot: apiResult?.hot,
-        totalPages: apiResult?.totalPages,
-        currentPage: apiResult?.currentPage,
-      });
+
 
       // ✅ hot 공지사항 처리 (page 0일 때만)
       const hotNotices = apiResult?.hot || [];
@@ -145,7 +134,6 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
   );
 
   useEffect(() => {
-    console.log("useEffect triggered", { isFocused, noticeType, keyword, selectedColleges });
     if (isFocused) {
       loadInitialData();
     }

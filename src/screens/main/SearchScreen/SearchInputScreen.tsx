@@ -31,7 +31,7 @@ const SearchInputScreen = () => {
         const result = await keywordApi.getKeywords();
         setKeywords(result);
       } catch (err) {
-        console.log(err);
+        // Error handling
       }
     };
     fetchKeywords();
@@ -39,7 +39,6 @@ const SearchInputScreen = () => {
 
   const handleSend = (keyword?: string) => {
     const searchKeyword = keyword || searchText;
-    console.log('handleSend called with:', { keyword, searchText, searchKeyword });
     if (searchKeyword.trim()) {
       navigation.navigate("SearchResult", { keyword: searchKeyword });
     }

@@ -66,10 +66,6 @@ export const noticeApi = {
       }
 
       // 서버로 요청 보내기 전에 파라미터 로그 출력
-      console.log(
-        "[noticeApi.searchNotices] GET /notices/search?" +
-          searchParams.toString()
-      );
 
       const response: AxiosResponse<NoticeApiResponse> = await apiClient.get(
         `/notices/search?${searchParams.toString()}`
