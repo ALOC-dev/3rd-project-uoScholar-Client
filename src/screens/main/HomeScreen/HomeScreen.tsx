@@ -4,7 +4,6 @@ import {
   Image,
   Platform,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
@@ -57,7 +56,7 @@ const HomeScreen = () => {
 
         {/* Input */}
         <View style={styles.inputContainer}>
-          <ChatInput onsend={handleSendMessage} />
+          <ChatInput onsend={handleSendMessage} chatList={chatList} />
         </View>
       </KeyboardAvoidingView>
     </View>

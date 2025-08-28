@@ -7,7 +7,7 @@ import {
   Image,
 } from "react-native";
 import IMAGES from "../../assets";
-import { chatApi } from "../../api/Api";
+import { chatApi, ChatResponse } from "../../api/Api";
 
 export type ChatMessage = {
   message: string;
@@ -15,7 +15,12 @@ export type ChatMessage = {
   link: "";
 };
 
-const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
+interface ChatInputProps {
+  onsend: (message: ChatMessage) => void;
+  chatList: ChatMessage[];
+}
+
+const ChatInput = ({ onsend, chatList }: ChatInputProps) => {
   const [text, setText] = useState("");
 
   const handleSend = async () => {
@@ -27,8 +32,26 @@ const ChatInput = ({ onsend }: { onsend: (message: ChatMessage) => void }) => {
     onsend({ message: currentText, role: "user", link: "" });
 
     try {
-      const assistantReply = await chatApi.sendMessage(currentText);
-      onsend({ message: assistantReply, role: "assistant", link: "" });
+      // 채팅 히스토리를 요구사항에 맞는 형태로 변환
+      const history = chatList.map(chat => ({
+        role: chat.role,
+        content: chat.message
+      }));
+
+      // API 요청 데이터 구성
+      const requestData = {
+        history: history,
+        user_message: currentText
+      };
+
+      const response: ChatResponse = await chatApi.sendMessage(requestData);
+      
+      // found 값이 true인 경우 특별한 처리를 할 수 있습니다
+      if (response.found) {
+        console.log("관련 공지사항을 찾았습니다!");
+      }
+      
+      onsend({ message: response.message, role: "assistant", link: "" });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "메시지 전송 중 오류가 발생했습니다.";
       console.error("chatApi.sendMessage 실패:", errorMessage);

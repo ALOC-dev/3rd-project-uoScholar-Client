@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { ScrollView, ActivityIndicator, StyleSheet } from "react-native";
+import { ScrollView, ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import BlockNotice from "../../../components/Notice/BlockNotice";
 import CardNotice from "../../../components/Notice/CardNotice";
 import { noticeApi } from "../../../api/Api";
@@ -170,6 +170,14 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
           {blockNotices.map((notice, idx) => (
             <BlockNotice key={`block-${idx}`} notice={notice} />
           ))}
+          
+          {/* 빈 결과 메시지 */}
+          {!loading && cardNotices.length === 0 && blockNotices.length === 0 && (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>앗, 조건에 맞는 검색 결과가 없어요 😢</Text>
+            </View>
+          )}
+          
           {loadingMore && <ActivityIndicator size="small" color="gray" style={styles.loadingMore} />}
         </>
       )}
@@ -185,6 +193,18 @@ const styles = StyleSheet.create({
   },
   loadingMore: {
     marginVertical: 10,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 50,
+    minHeight: 400,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
   },
 });
 
