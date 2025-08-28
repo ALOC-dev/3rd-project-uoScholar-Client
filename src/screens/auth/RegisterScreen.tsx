@@ -214,11 +214,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
                   style={styles.checkboxRow}
                   onPress={() => handleCollegeToggle(college.code as College)}
                 >
-                  <View style={styles.checkbox}>
-                    {selectedColleges.has(college.code as College) && (
-                      <Text style={styles.checkmark}>✓</Text>
-                    )}
-                  </View>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      selectedColleges.has(college.code as College) &&
+                        styles.checkboxChecked,
+                    ]}
+                  ></View>
                   <Text style={styles.checkboxLabel}>{college.label}</Text>
                 </TouchableOpacity>
               ))}
@@ -339,6 +341,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#FFFFFF",
+  },
+  checkboxChecked: {
+    backgroundColor: "#333",
   },
   checkmark: {
     color: "#333",
