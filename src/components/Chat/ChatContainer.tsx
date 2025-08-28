@@ -22,7 +22,7 @@ const ChatContainer = ({ chatList }: { chatList: ChatMessage[] }) => {
         <ChatBubble
           key={index}
           text={chat.message}
-          sender={chat.sender}
+          role={chat.role}
           link={chat.link}
         />
       ))}

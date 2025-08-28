@@ -4,11 +4,11 @@ import COLORS from "../../constants/colors";
 
 interface ChatBubbleProps {
   text: string;
-  sender: "bot" | "client";
+  role: "assistant" | "user";
   link: "";
 }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender, link }) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ text, role, link }) => {
   const timeFormat = (date: Date) => {
     const hours = date.getHours();
     const minutes = date.getMinutes();
@@ -19,12 +19,12 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender, link }) => {
   };
 
   const currentTime = timeFormat(new Date());
-  const isBot = sender === "bot";
-  return isBot ? (
+  const isAssistant = role === "assistant";
+  return isAssistant ? (
     <View style={[styles.rowContainer, styles.leftAlign]}>
-      <View style={[styles.bubble, styles.botBubble]}>
+      <View style={[styles.bubble, styles.assistantBubble]}>
         <Text
-          style={[styles.text, styles.botText]}
+          style={[styles.text, styles.assistantText]}
           onPress={() => {
             if (link !== "") {
               Linking.openURL(link);
@@ -39,8 +39,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, sender, link }) => {
   ) : (
     <View style={[styles.rowContainer, styles.rightAlign]}>
       <Text style={styles.time}>{currentTime}</Text>
-      <View style={[styles.bubble, styles.clientBubble]}>
-        <Text style={[styles.text, styles.clientText]}>{text}</Text>
+      <View style={[styles.bubble, styles.userBubble]}>
+        <Text style={[styles.text, styles.userText]}>{text}</Text>
       </View>
     </View>
   );
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
-  botBubble: {
+  assistantBubble: {
     maxWidth: "70%",
     backgroundColor: COLORS.BOT_BUBBLE_BACKGROUND,
     borderWidth: 1,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
   },
-  clientBubble: {
+  userBubble: {
     maxWidth: "60%",
     backgroundColor: COLORS.CLIENT_BUBBLE_BACKGROUND,
 
@@ -89,10 +89,10 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     flexDirection: "row",
   },
-  botText: {
+  assistantText: {
     color: COLORS.BOT_TEXT,
   },
-  clientText: {
+  userText: {
     color: COLORS.CLIENT_TEXT,
   },
   time: {
