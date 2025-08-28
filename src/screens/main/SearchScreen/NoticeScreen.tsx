@@ -7,6 +7,7 @@ import COLORS from "../../../constants/colors";
 import { useIsFocused } from "@react-navigation/native";
 import { useCollege } from "../../../hooks/use-college";
 
+// Types
 type NoticeItem = {
   title: string;
   subText: string;
@@ -18,10 +19,22 @@ type NoticeScreenProps = {
   keyword?: string;
 };
 
+type ApiResult = {
+  data?: any[];
+  content?: any[];
+  hot?: any[];
+  totalPages?: number;
+};
+
+// Constants
+const ITEMS_PER_PAGE = 15;
+const SCROLL_PADDING_TO_BOTTOM = 20;
+
 const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
-  const ITEMS_PER_PAGE = 15;
   const isFocused = useIsFocused();
   const { selectedColleges } = useCollege();
+  
+  // State
   const [blockNotices, setBlockNotices] = useState<NoticeItem[]>([]);
   const [cardNotices, setCardNotices] = useState<NoticeItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,57 +43,67 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
   const [hasMore, setHasMore] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
 
-  // ✅ 초기 데이터 로드
+  // Helper functions
+  const mapNoticeToItem = (item: any): NoticeItem => ({
+    title: item.title,
+    subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount || item.views || ""}`,
+    link: item.link,
+  });
+
+  const fetchNotices = async (page: number): Promise<ApiResult> => {
+    switch (noticeType) {
+      case "general":
+        return await noticeApi.getGeneralNotices(page, ITEMS_PER_PAGE, keyword);
+      case "academic":
+        return await noticeApi.getAcademicNotices(page, ITEMS_PER_PAGE, keyword);
+      case "department":
+        return await noticeApi.getDepartmentNotices(Array.from(selectedColleges), page, ITEMS_PER_PAGE, keyword);
+      default:
+        throw new Error(`Unknown notice type: ${noticeType}`);
+    }
+  };
+
+  const processApiResult = (apiResult: ApiResult, isInitialLoad: boolean = false, currentPage: number = 0) => {
+    // Process hot notices (only for initial load)
+    if (isInitialLoad) {
+      const hotNotices = apiResult?.hot || [];
+      const mappedHotNotices = hotNotices.map(mapNoticeToItem);
+      setCardNotices(mappedHotNotices);
+    }
+
+    // Process regular notices
+    const notices = apiResult?.data || apiResult?.content || [];
+    const mappedNotices = notices.map(mapNoticeToItem);
+    
+    if (isInitialLoad) {
+      setBlockNotices(mappedNotices);
+    } else {
+      setBlockNotices(prev => [...prev, ...mappedNotices]);
+    }
+
+    // Update pagination state
+    const totalPages = apiResult?.totalPages || 0;
+    setTotalPages(totalPages);
+    setHasMore(currentPage < totalPages);
+  };
+
+  // Data loading functions
   const loadInitialData = useCallback(async () => {
     setLoading(true);
     setCurrentPage(0);
     setHasMore(true);
 
     try {
-      let apiResult;
-      if (noticeType === "general") {
-        apiResult = await noticeApi.getGeneralNotices(0, ITEMS_PER_PAGE, keyword);
-      } else if (noticeType === "academic") {
-        apiResult = await noticeApi.getAcademicNotices(0, ITEMS_PER_PAGE, keyword);
-      } else if (noticeType === "department") {
-        apiResult = await noticeApi.getDepartmentNotices(
-          Array.from(selectedColleges),
-          0,
-          ITEMS_PER_PAGE,
-          keyword
-        );
-      }
-
-
-
-      // ✅ hot 공지사항 처리 (page 0일 때만)
-      const hotNotices = apiResult?.hot || [];
-      const mappedHotNotices = hotNotices.map((item) => ({
-        title: item.title,
-        subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount}`,
-        link: item.link,
-      }));
-      setCardNotices(mappedHotNotices);
-
-      // ✅ 일반 공지사항 처리
-      const notices = apiResult?.data || apiResult?.content || [];
-      const mappedNotices = notices.map((item) => ({
-        title: item.title,
-        subText: `${item.department} | ${item.date || item.postedDate} | ${item.viewCount}`,
-        link: item.link,
-      }));
-
-      setBlockNotices(mappedNotices);
-      setTotalPages(apiResult?.totalPages || 0);
-      setHasMore(apiResult?.totalPages > 1);
-    } catch (err) {
-      console.error("Error in loadInitialData:", err);
+      const apiResult = await fetchNotices(0);
+      processApiResult(apiResult, true, 0);
+    } catch (error) {
+      console.error("Error in loadInitialData:", error);
+      // TODO: Add user-friendly error handling
     } finally {
       setLoading(false);
     }
   }, [noticeType, keyword, selectedColleges]);
 
-  // ✅ 추가 데이터 로드
   const loadMoreData = useCallback(async () => {
     if (loadingMore || !hasMore) return;
 
@@ -88,56 +111,75 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
     const nextPage = currentPage + 1;
 
     try {
-      let apiResult;
-      if (noticeType === "general") {
-        apiResult = await noticeApi.getGeneralNotices(nextPage, ITEMS_PER_PAGE, keyword);
-      } else if (noticeType === "academic") {
-        apiResult = await noticeApi.getAcademicNotices(nextPage, ITEMS_PER_PAGE, keyword);
-      } else if (noticeType === "department") {
-        apiResult = await noticeApi.getDepartmentNotices(
-          Array.from(selectedColleges),
-          nextPage,
-          ITEMS_PER_PAGE,
-          keyword
-        );
-      }
-
-      // ✅ 추가 페이지에서는 hot이 없으므로 일반 공지만 처리
-      const notices = apiResult?.data || apiResult?.content || [];
-      const mappedNotices = notices.map((item) => ({
-        title: item.title,
-        subText: `${item.department} | ${item.date || item.postedDate} | ${item.views || ""}`,
-        link: item.link,
-      }));
-
-      setBlockNotices((prev) => [...prev, ...mappedNotices]);
+      const apiResult = await fetchNotices(nextPage);
+      processApiResult(apiResult, false, nextPage);
       setCurrentPage(nextPage);
-      setHasMore(nextPage < (apiResult?.totalPages || 0));
-    } catch (err) {
-      console.error("Error in loadMoreData:", err);
+    } catch (error) {
+      console.error("Error in loadMoreData:", error);
+      // TODO: Add user-friendly error handling
     } finally {
       setLoadingMore(false);
     }
   }, [currentPage, hasMore, loadingMore, noticeType, keyword, selectedColleges]);
 
-  // ✅ 스크롤 이벤트 핸들러
+  // Scroll handler
   const handleScroll = useCallback(
     (event: any) => {
       const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-      const paddingToBottom = 20;
 
-      if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+      if (layoutMeasurement.height + contentOffset.y >= contentSize.height - SCROLL_PADDING_TO_BOTTOM) {
         loadMoreData();
       }
     },
     [loadMoreData]
   );
 
+  // Effects
   useEffect(() => {
     if (isFocused) {
       loadInitialData();
     }
   }, [isFocused, noticeType, keyword, loadInitialData]);
+
+  // Render functions
+  const renderHotNotices = () => (
+    cardNotices.map((notice, idx) => (
+      <CardNotice key={`card-${idx}`} notice={notice} />
+    ))
+  );
+
+  const renderRegularNotices = () => (
+    blockNotices.map((notice, idx) => (
+      <BlockNotice key={`block-${idx}`} notice={notice} />
+    ))
+  );
+
+  const renderEmptyState = () => (
+    <View style={styles.emptyContainer}>
+      <Text style={styles.emptyText}>앗, 조건에 맞는 검색 결과가 없어요 😢</Text>
+    </View>
+  );
+
+  const renderLoadingMore = () => (
+    loadingMore && <ActivityIndicator size="small" color="gray" style={styles.loadingMore} />
+  );
+
+  const renderContent = () => {
+    if (loading) {
+      return <ActivityIndicator size="large" color="gray" />;
+    }
+
+    const hasNoResults = cardNotices.length === 0 && blockNotices.length === 0;
+
+    return (
+      <>
+        {renderHotNotices()}
+        {renderRegularNotices()}
+        {hasNoResults && renderEmptyState()}
+        {renderLoadingMore()}
+      </>
+    );
+  };
 
   return (
     <ScrollView
@@ -146,29 +188,7 @@ const NoticeScreen = ({ noticeType, keyword }: NoticeScreenProps) => {
       onScroll={handleScroll}
       scrollEventThrottle={16}
     >
-      {loading ? (
-        <ActivityIndicator size="large" color="gray" />
-      ) : (
-        <>
-          {/* ✅ Hot 공지사항들을 CardNotice로 렌더링 */}
-          {cardNotices.map((notice, idx) => (
-            <CardNotice key={`card-${idx}`} notice={notice} />
-          ))}
-          {/* ✅ 일반 공지사항들을 BlockNotice로 렌더링 */}
-          {blockNotices.map((notice, idx) => (
-            <BlockNotice key={`block-${idx}`} notice={notice} />
-          ))}
-          
-          {/* 빈 결과 메시지 */}
-          {!loading && cardNotices.length === 0 && blockNotices.length === 0 && (
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyText}>앗, 조건에 맞는 검색 결과가 없어요 😢</Text>
-            </View>
-          )}
-          
-          {loadingMore && <ActivityIndicator size="small" color="gray" style={styles.loadingMore} />}
-        </>
-      )}
+      {renderContent()}
     </ScrollView>
   );
 };
