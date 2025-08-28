@@ -13,6 +13,12 @@ export type ChatMessage = {
   message: string;
   role: "assistant" | "user";
   link: "";
+  selected?: {
+    title: string;
+    department: string;
+    date: string;
+    link: string;
+  };
 };
 
 interface ChatInputProps {
@@ -52,7 +58,12 @@ const ChatInput = ({ onsend, chatList, onFound }: ChatInputProps) => {
         onFound(response.found || false);
       }
       
-      onsend({ message: response.message, role: "assistant", link: "" });
+      onsend({ 
+        message: response.assistant, 
+        role: "assistant", 
+        link: "",
+        selected: response.selected
+      });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "메시지 전송 중 오류가 발생했습니다.";
       console.error("chatApi.sendMessage 실패:", errorMessage);

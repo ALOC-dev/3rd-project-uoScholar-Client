@@ -10,8 +10,14 @@ export interface ChatRequest {
 }
 
 export interface ChatResponse {
-  message: string;
+  assistant: string;
   found?: boolean;
+  selected?: {
+    title: string;
+    department: string;
+    date: string;
+    link: string;
+  };
 }
 
 export interface SearchRequest {
