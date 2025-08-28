@@ -84,6 +84,12 @@ const ChatInput = ({ onsend, chatList, onFound }: ChatInputProps) => {
           placeholder="텍스트를 입력하세요"
           value={text}
           onChangeText={setText}
+          blurOnSubmit={false}
+          returnKeyType="send"
+          onSubmitEditing={handleSend}
+          multiline={false}
+          autoCapitalize="sentences"
+          autoCorrect={false}
         />
         <TouchableOpacity onPress={handleSend} disabled={text === ""}>
           <Image
