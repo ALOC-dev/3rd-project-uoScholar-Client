@@ -37,8 +37,12 @@ const SearchInputScreen = () => {
     fetchKeywords();
   }, [])
 
-  const handleSend = () => {
-    navigation.navigate("SearchResult", { keyword: searchText });
+  const handleSend = (keyword?: string) => {
+    const searchKeyword = keyword || searchText;
+    console.log('handleSend called with:', { keyword, searchText, searchKeyword });
+    if (searchKeyword.trim()) {
+      navigation.navigate("SearchResult", { keyword: searchKeyword });
+    }
   };
 
   return (
@@ -57,7 +61,7 @@ const SearchInputScreen = () => {
           placeholder="검색어를 입력해주세요."
           style={styles.input}
           autoFocus
-          onSubmitEditing={handleSend}
+          onSubmitEditing={() => handleSend()}
           value={searchText} // 👈 입력값 상태 연결
           onChangeText={setSearchText} // 👈 입력 시 상태 갱신
         />
@@ -75,7 +79,7 @@ const SearchInputScreen = () => {
             <TouchableOpacity
               key={idx}
               style={styles.keywordBadge}
-              onPress={() => {setSearchText(keyword); handleSend();}}
+              onPress={() => handleSend(keyword)}
             >
               <Text style={styles.keywordText}>{keyword}</Text>
             </TouchableOpacity>
