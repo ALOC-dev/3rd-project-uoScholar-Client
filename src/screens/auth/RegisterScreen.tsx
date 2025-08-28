@@ -9,7 +9,11 @@ import {
   AppState,
   InteractionManager,
 } from "react-native";
-import { useNavigation, DrawerActions, useIsFocused } from "@react-navigation/native";
+import {
+  useNavigation,
+  DrawerActions,
+  useIsFocused,
+} from "@react-navigation/native";
 import useCollege from "../../hooks/use-college";
 import { College, COLLEGE_LABELS } from "../../types/college";
 import { useCollegeHydration } from "../../store/use-college-store";
@@ -63,7 +67,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
 
   // 선택 상태가 바뀔 때 userInfo.colleges를 코드 문자열 배열로 동기화
   useEffect(() => {
-    setUserInfo((prev) => ({ ...prev, colleges: Array.from(selectedColleges) }));
+    setUserInfo((prev) => ({
+      ...prev,
+      colleges: Array.from(selectedColleges),
+    }));
   }, [selectedColleges]);
 
   const appStateRef = useRef(AppState.currentState);
@@ -113,45 +120,66 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
     if (onSubmit) {
       onSubmit({ ...userInfo, colleges: Array.from(selectedColleges) });
     } else {
-      showAlertIfPossible(
-        mode === "register" ? "회원가입 완료" : "정보 수정 완료",
-        `선택된 대학: ${Array.from(selectedColleges).map(c => COLLEGE_LABELS[c as College]).join(", ")}`,
-        [
-          {
-            text: "확인",
-            onPress: () => {
-              console.log(
-                `${mode === "register" ? "회원가입" : "정보 수정"} 정보:`,
-                { ...userInfo, colleges: Array.from(selectedColleges) }
-              );
-
-              // title이 '회원가입'일 때만 Home으로 이동
-              if (title === "회원가입") {
+      // register 모드에서는 알림 표시 후 Home으로 이동하고 모드를 edit로 변경
+      if (mode === "register") {
+        showAlertIfPossible(
+          "회원가입 완료",
+          `선택된 대학: ${Array.from(selectedColleges)
+            .map((c) => COLLEGE_LABELS[c as College])
+            .join(", ")}`,
+          [
+            {
+              text: "확인",
+              onPress: () => {
+                console.log("회원가입 완료:", {
+                  ...userInfo,
+                  colleges: Array.from(selectedColleges),
+                });
+                setMode("edit");
+                setTitle("정보 수정");
                 navigation.navigate("Home");
-              }
-
-              setMode("edit");
-              setTitle("정보 수정");
+              },
             },
-          },
-        ]
-      );
+          ]
+        );
+      } else {
+        // edit 모드에서는 알림 표시
+        showAlertIfPossible(
+          "정보 수정 완료",
+          `선택된 대학: ${Array.from(selectedColleges)
+            .map((c) => COLLEGE_LABELS[c as College])
+            .join(", ")}`,
+          [
+            {
+              text: "확인",
+              onPress: () => {
+                console.log("정보 수정 완료:", {
+                  ...userInfo,
+                  colleges: Array.from(selectedColleges),
+                });
+              },
+            },
+          ]
+        );
+      }
     }
   };
 
-  // 스토어가 복원(hydrate)된 뒤에, 선택된 대학이 존재하면 모드를 edit로 변경
+  // 스토어가 복원(hydrate)된 뒤에, 이미 선택된 대학이 존재하면 모드를 edit로 변경 (최초 로드 시에만)
   useEffect(() => {
     if (!hasHydrated) return;
-    if (selectedColleges.size > 0 && title === "회원가입") {
+    // 이미 저장된 대학이 있고, 현재 register 모드라면 edit 모드로 변경 (최초 로드 시에만)
+    if (selectedColleges.size > 0 && mode === "register") {
       setMode("edit");
       setTitle("정보 수정");
     }
-  }, [hasHydrated, selectedColleges.size, title]);
+  }, [hasHydrated, mode]); // selectedColleges.size 제거
 
   return (
     <View style={styles.container}>
       {mode === "edit" && (
         <View style={{ paddingTop: insets.top + 15 }}>
+          {/* 헤더 */}
           <View style={styles.topContainer}>
             {/* 왼쪽 TabIcon */}
             <TouchableOpacity
@@ -162,21 +190,17 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             </TouchableOpacity>
 
             {/* 중앙 텍스트 */}
-            <Text style={styles.headerTitle}>마이 페이지</Text>
+            <Text style={styles.headerTitle}>{title}</Text>
           </View>
         </View>
       )}
-      
+
       {/* 메인 컨텐츠 - 중앙 정렬 */}
       <View style={styles.centeredContent}>
         {mode === "register" && (
           <View style={styles.registerNoticeContainer}>
-            <Text style={styles.noticeText}>
-              관심 대학을 선택해주세요.
-            </Text>
-            <Text style={styles.subNoticeText}>
-              (중복 선택 가능)
-            </Text>
+            <Text style={styles.noticeText}>관심 대학을 선택해주세요.</Text>
+            <Text style={styles.subNoticeText}>(중복 선택 가능)</Text>
           </View>
         )}
         {/* 폼 컨텐츠 */}
@@ -227,18 +251,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.HEADER_BACKGROUND,
   },
   backButtonContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 60,
     left: 20,
     zIndex: 10,
   },
   centeredContent: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingHorizontal: 20,
     maxWidth: 400,
-    alignSelf: 'center',
-    width: '100%',
+    alignSelf: "center",
+    width: "100%",
   },
   tabBtn: {
     position: "absolute",
@@ -248,7 +272,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: '#333',
+    color: "#333",
     position: "absolute",
   },
   tabIcon: {
@@ -258,36 +282,36 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: "bold",
-    color: '#333',
+    color: "#333",
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
   formContainer: {
-    width: '100%',
+    width: "100%",
   },
   inputContainer: {
     marginBottom: 32,
   },
   label: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     marginBottom: 8,
   },
   description: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginBottom: 20,
   },
   checkboxContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#EAEAEA',
-    shadowColor: '#000',
+    borderColor: "#EAEAEA",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -295,44 +319,44 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   checkboxRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#EAEAEA',
+    borderBottomColor: "#EAEAEA",
   },
   checkbox: {
     width: 24,
     height: 24,
     borderWidth: 2,
-    borderColor: '#333',
+    borderColor: "#333",
     borderRadius: 6,
     marginRight: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
   },
   checkmark: {
-    color: '#333',
+    color: "#333",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   checkboxLabel: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
     flex: 1,
   },
   submitButton: {
-    backgroundColor: '#333',
+    backgroundColor: "#333",
     borderRadius: 12,
     paddingVertical: 18,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 24,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,
@@ -342,9 +366,9 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   submitButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: "700",
   },
   registerNoticeContainer: {
     marginBottom: 12,
@@ -353,12 +377,12 @@ const styles = StyleSheet.create({
   noticeText: {
     fontSize: 25,
     color: "#333",
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subNoticeText: {
     fontSize: 20,
     color: "#666",
-  }
+  },
 });
 
 export default RegisterScreen;
