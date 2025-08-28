@@ -40,14 +40,25 @@ npx react-native run-android
 npx react-native run-ios
 ```
 
+## 🔧 API 설정
+
+### Base URL 분리
+- **일반 API**: 공지사항, 키워드 등 일반적인 API 요청
+- **Chat API**: 챗봇 관련 API 요청 (별도 서버)
+
 ## 📁 폴더 구조
 React Native 프로젝트를 구조화할 때, **유지보수와 확장성**을 우선 고려하였습니다. 서비스 개발을 하면서도 계속적인 기능 수정이 이루어졌기 때문에, 다음과 같은 구조를 채택하였습니다.
 ```
 src/
 ├── api/ # Axios 인스턴스 선언의 공통화와 API 요청 함수 분리
-├── assets/ # 정적 파일들의 통합 관리리
+│   ├── chatApi.ts # Chat API (별도 baseURL 사용)
+│   ├── noticeApi.ts # 공지사항 API
+│   └── keywordApi.ts # 키워드 API
+├── assets/ # 정적 파일들의 통합 관리
 ├── components/ # 재사용 가능한 UI 단위 컴포넌트
-├── constants/ # 앱 전역에서 사용하는 상수 (색상)
+├── constants/ # 앱 전역에서 사용하는 상수
+│   ├── colors.ts # 색상 상수
+│   └── config.ts # API 설정 및 환경별 설정
 ├── navigation/ # 화면 이동(Drawer Navigator) 설정
 └── screens/ # 화면 페이지 컴포넌트들의 기능별 분리
 ```
