@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Text,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, DrawerActions } from "@react-navigation/native";
@@ -23,9 +24,19 @@ const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const insets = useSafeAreaInsets();
   const [chatList, setChatList] = useState<ChatMessage[]>([]);
+  const [found, setFound] = useState<boolean>(false);
 
   const handleSendMessage = (newMessage: ChatMessage) => {
     setChatList((prev) => [...prev, newMessage]);
+  };
+
+  const handleFound = (foundValue: boolean) => {
+    setFound(foundValue);
+  };
+
+  const handleRefreshChat = () => {
+    setChatList([]);
+    setFound(false);
   };
 
   return (
@@ -54,9 +65,18 @@ const HomeScreen = () => {
           <ChatContainer chatList={chatList} />
         </View>
 
+        {/* 대화 새로고침 버튼 */}
+        {found && (
+          <View style={styles.refreshContainer}>
+            <TouchableOpacity style={styles.refreshButton} onPress={handleRefreshChat}>
+              <Text style={styles.refreshText}>대화 새로고침 🔃</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* Input */}
         <View style={styles.inputContainer}>
-          <ChatInput onsend={handleSendMessage} chatList={chatList} />
+          <ChatInput onsend={handleSendMessage} chatList={chatList} onFound={handleFound} />
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -95,6 +115,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 10,
     backgroundColor: COLORS.MAIN_BACKGROUND,
+  },
+  refreshContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: COLORS.FOOTER_BACKGROUND,
+  },
+  refreshButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    alignItems: 'center',
+  },
+  refreshText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
   },
   inputContainer: {
     paddingTop: 5,

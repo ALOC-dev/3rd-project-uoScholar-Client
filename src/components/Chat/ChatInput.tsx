@@ -18,9 +18,10 @@ export type ChatMessage = {
 interface ChatInputProps {
   onsend: (message: ChatMessage) => void;
   chatList: ChatMessage[];
+  onFound?: (found: boolean) => void;
 }
 
-const ChatInput = ({ onsend, chatList }: ChatInputProps) => {
+const ChatInput = ({ onsend, chatList, onFound }: ChatInputProps) => {
   const [text, setText] = useState("");
 
   const handleSend = async () => {
@@ -46,9 +47,9 @@ const ChatInput = ({ onsend, chatList }: ChatInputProps) => {
 
       const response: ChatResponse = await chatApi.sendMessage(requestData);
       
-      // found 값이 true인 경우 특별한 처리를 할 수 있습니다
-      if (response.found) {
-        console.log("관련 공지사항을 찾았습니다!");
+      // found 값을 HomeScreen으로 전달
+      if (onFound) {
+        onFound(response.found || false);
       }
       
       onsend({ message: response.message, role: "assistant", link: "" });
