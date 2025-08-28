@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { getApiConfig } from "../constants/config";
 
 // Chat Types
 export interface ChatRequest {
@@ -28,14 +29,26 @@ export interface SearchResponse {
   results: any[];
 }
 
-// Constants
-export const BASE_URL =
-  "https://8080-alocdev-3rdprojectuosch-zeq396z26xs.ws-us121.gitpod.io/";
-export const DEFAULT_TIMEOUT = 10000;
+// Get API configuration
+const apiConfig = getApiConfig();
 
-// Create axios instance
+// Constants (for backward compatibility)
+export const BASE_URL = apiConfig.BASE_URL;
+export const CHAT_BASE_URL = apiConfig.CHAT_BASE_URL;
+export const DEFAULT_TIMEOUT = apiConfig.DEFAULT_TIMEOUT;
+
+// Create axios instance for general APIs
 export const apiClient = axios.create({
   baseURL: BASE_URL,
+  timeout: DEFAULT_TIMEOUT,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Create axios instance for chat APIs
+export const chatApiClient = axios.create({
+  baseURL: CHAT_BASE_URL,
   timeout: DEFAULT_TIMEOUT,
   headers: {
     "Content-Type": "application/json",
@@ -56,7 +69,7 @@ export const handleApiError = (error: AxiosError): string => {
 // ChatInput에서 사용하는 함수
 export const sendTextToBackend = async (message: string): Promise<any[]> => {
   try {
-    const response: AxiosResponse<any> = await apiClient.post("/chat/search", {
+    const response: AxiosResponse<any> = await chatApiClient.post("/chat/search", {
       message,
     });
     return response.data || [];
@@ -73,7 +86,7 @@ export const chatApi = {
    */
   sendMessage: async (requestData: ChatRequest): Promise<ChatResponse> => {
     try {
-      const response: AxiosResponse<ChatResponse> = await apiClient.post(
+      const response: AxiosResponse<ChatResponse> = await chatApiClient.post(
         "/chat/test",
         requestData
       );
