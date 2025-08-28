@@ -16,7 +16,7 @@ export interface ChatResponse {
   selected?: {
     title: string;
     department: string;
-    date: string;
+    posted_date: string;
     link: string;
   };
 }
@@ -87,7 +87,7 @@ export const chatApi = {
   sendMessage: async (requestData: ChatRequest): Promise<ChatResponse> => {
     try {
       const response: AxiosResponse<ChatResponse> = await chatApiClient.post(
-        "/chat/test",
+        "/chat",
         requestData
       );
       return response.data;

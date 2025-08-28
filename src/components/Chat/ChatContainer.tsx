@@ -22,7 +22,7 @@ const ChatContainer = ({ chatList }: { chatList: ChatMessage[] }) => {
       
       // selected가 있는 경우 별도의 공지사항 bubble 렌더링
       if (chat.selected) {
-        const noticeText = `${chat.selected.title}\n${chat.selected.department} | ${chat.selected.date}`;
+        const noticeText = `${chat.selected.title}\n${chat.selected.department} | ${chat.selected.posted_date}`;
         bubbles.push(
           <ChatBubble
             key={`notice-${index}`}

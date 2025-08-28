@@ -16,7 +16,7 @@ export type ChatMessage = {
   selected?: {
     title: string;
     department: string;
-    date: string;
+    posted_date: string;
     link: string;
   };
 };
