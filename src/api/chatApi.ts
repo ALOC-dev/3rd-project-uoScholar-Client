@@ -2,11 +2,16 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 
 // Chat Types
 export interface ChatRequest {
-  message: string;
+  history: {
+    role: "assistant" | "user";
+    content: string;
+  }[];
+  user_message: string;
 }
 
 export interface ChatResponse {
   message: string;
+  found?: boolean;
 }
 
 export interface SearchRequest {
@@ -60,15 +65,13 @@ export const chatApi = {
   /**
    * AI 챗봇에게 텍스트 메시지 전송
    */
-  sendMessage: async (message: string): Promise<string> => {
+  sendMessage: async (requestData: ChatRequest): Promise<ChatResponse> => {
     try {
       const response: AxiosResponse<ChatResponse> = await apiClient.post(
-        "/chat/ai",
-        {
-          message,
-        }
+        "/chat/test",
+        requestData
       );
-      return response.data.message;
+      return response.data;
     } catch (error) {
       const errorMessage = handleApiError(error as AxiosError);
       throw new Error(errorMessage);
