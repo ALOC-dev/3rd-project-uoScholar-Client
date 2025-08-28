@@ -1,12 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { Image, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import IMAGES from "../assets/index";
 import NoticeScreen from "../screens/main/SearchScreen/NoticeScreen";
 
 const Tab = createBottomTabNavigator();
 
 const MainTabs = ({ onTabChange, keyword }) => {
+  const insets = useSafeAreaInsets();
   const DepartmentNoticeScreen = () => <NoticeScreen noticeType="department" keyword={keyword} />;
   const AcademicNoticeSCreen = () => <NoticeScreen noticeType="academic" keyword={keyword} />;
   const GeneralNoticeScreen = () => <NoticeScreen noticeType="general" keyword={keyword} />;
@@ -15,7 +17,11 @@ const MainTabs = ({ onTabChange, keyword }) => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: styles.tabBarStyle,
+        tabBarStyle: {
+          ...styles.tabBarStyle,
+          paddingBottom: insets.bottom,
+          height: 80 + insets.bottom,
+        },
         tabBarLabelStyle: styles.tabBarLabelStyle,
         tabBarActiveTintColor: "black",
         tabBarInactiveTintColor: "gray",
@@ -76,7 +82,8 @@ const MainTabs = ({ onTabChange, keyword }) => {
 const styles = StyleSheet.create({
   tabBarStyle: {
     backgroundColor: "#fff",
-    height: 80,
+    borderTopWidth: 1,
+    borderTopColor: "#e0e0e0",
   },
   tabBarLabelStyle: {
     fontWeight: "bold",
