@@ -13,21 +13,10 @@ type SearchScreenNavigationProp = DrawerNavigationProp<
   "Search"
 >;
 
-export type ChatMessage = {
-  message: string;
-  sender: "bot" | "client";
-};
-
 const SearchScreen = () => {
   const [headerTitle, setHeaderTitle] = useState<string>("Search");
   const navigation = useNavigation<SearchScreenNavigationProp>();
   const insets = useSafeAreaInsets();
-
-  const [chatList, setChatList] = useState<ChatMessage[]>([]);
-
-  const handleSendMessage = (newMessage: ChatMessage) => {
-    setChatList((prev) => [...prev, newMessage]);
-  };
 
   return (
     <View style={[styles.root]}>
