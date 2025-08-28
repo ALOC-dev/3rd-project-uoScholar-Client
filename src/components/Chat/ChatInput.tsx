@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import IMAGES from "../../assets";
 import { chatApi, ChatResponse } from "../../api/Api";
+import { AxiosError } from "axios";
 
 export type ChatMessage = {
   message: string;
@@ -65,10 +66,32 @@ const ChatInput = ({ onsend, chatList, onFound }: ChatInputProps) => {
         selected: response.selected
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "메시지 전송 중 오류가 발생했습니다.";
-      console.error("chatApi.sendMessage 실패:", errorMessage);
+      console.error("chatApi.sendMessage 실패:", error);
+      
+      // 사용자 친화적인 에러 메시지 생성
+      let userFriendlyMessage = "메시지 전송에 실패했어요 😢";
+      
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          const status = error.response.status;
+          if (status === 404) {
+            userFriendlyMessage = "요청하신 정보를 찾을 수 없어요 😢";
+          } else if (status === 500) {
+            userFriendlyMessage = "서버에 일시적인 문제가 있어요. 잠시 후 다시 시도해주세요 🔄";
+          } else if (status >= 400 && status < 500) {
+            userFriendlyMessage = "잘못된 요청이에요. 다시 확인해주세요 📝";
+          } else {
+            userFriendlyMessage = "서버에 문제가 있어요. 잠시 후 다시 시도해주세요 🔄";
+          }
+        } else if (error.request) {
+          userFriendlyMessage = "인터넷 연결을 확인해주세요 📶";
+        } else {
+          userFriendlyMessage = "알 수 없는 오류가 발생했어요. 다시 시도해주세요 🔄";
+        }
+      }
+      
       onsend({
-        message: `❌ 메시지 전송 실패: ${errorMessage}`,
+        message: userFriendlyMessage,
         role: "assistant",
         link: "",
       });

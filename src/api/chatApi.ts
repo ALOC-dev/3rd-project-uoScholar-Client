@@ -55,17 +55,6 @@ export const chatApiClient = axios.create({
   },
 });
 
-// Error handler utility
-export const handleApiError = (error: AxiosError): string => {
-  if (error.response) {
-    return `서버 오류: ${error.response.status}`;
-  } else if (error.request) {
-    return "서버로부터 응답이 없습니다.";
-  } else {
-    return `예외 에러 발생: ${error.message}`;
-  }
-};
-
 // ChatInput에서 사용하는 함수
 export const sendTextToBackend = async (message: string): Promise<any[]> => {
   try {
@@ -74,8 +63,7 @@ export const sendTextToBackend = async (message: string): Promise<any[]> => {
     });
     return response.data || [];
   } catch (error) {
-    const errorMessage = handleApiError(error as AxiosError);
-    throw new Error(errorMessage);
+    throw error; // 에러를 그대로 던짐
   }
 };
 
@@ -92,8 +80,7 @@ export const chatApi = {
       );
       return response.data;
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError);
-      throw new Error(errorMessage);
+      throw error; // 에러를 그대로 던짐
     }
   },
 };
