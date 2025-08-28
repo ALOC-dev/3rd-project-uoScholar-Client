@@ -5,7 +5,7 @@ import COLORS from "../../constants/colors";
 interface ChatBubbleProps {
   text: string;
   role: "assistant" | "user";
-  link: "";
+  link: string;
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({ text, role, link }) => {
@@ -20,6 +20,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, role, link }) => {
 
   const currentTime = timeFormat(new Date());
   const isAssistant = role === "assistant";
+  
   return isAssistant ? (
     <View style={[styles.rowContainer, styles.leftAlign]}>
       <View style={[styles.bubble, styles.assistantBubble]}>
