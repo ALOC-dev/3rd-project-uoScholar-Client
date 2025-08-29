@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   AppState,
   InteractionManager,
+  Dimensions,
 } from "react-native";
 import {
   useNavigation,
@@ -47,6 +48,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
 }) => {
   const navigation = useNavigation<RegisterScreenNavigationProp>();
   const isFocused = useIsFocused();
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
   const [userInfo, setUserInfo] = useState<UserInfo>(
     initialUserInfo || {
       colleges: [],
@@ -201,11 +203,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
       )}
 
       {/* 메인 컨텐츠 - 중앙 정렬 */}
-      <View style={styles.centeredContent}>
+      <View style={[styles.centeredContent, { maxWidth: screenWidth * 0.9 }]}>
         {mode === "register" && (
           <View style={styles.registerNoticeContainer}>
-            <Text style={styles.noticeText}>관심 대학을 선택해주세요.</Text>
-            <Text style={styles.subNoticeText}>(중복 선택 가능)</Text>
+            <Text style={[styles.noticeText, { fontSize: Math.min(25, screenWidth * 0.06) }]}>관심 대학을 선택해주세요.</Text>
+            <Text style={[styles.subNoticeText, { fontSize: Math.min(20, screenWidth * 0.05) }]}>(중복 선택 가능)</Text>
           </View>
         )}
         {/* 폼 컨텐츠 */}
@@ -216,25 +218,38 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
               {colleges.map((college) => (
                 <TouchableOpacity
                   key={college.code}
-                  style={styles.checkboxRow}
+                  style={[styles.checkboxRow, { paddingVertical: Math.max(12, screenHeight * 0.015) }]}
                   onPress={() => handleCollegeToggle(college.code as College)}
                 >
                   <View
                     style={[
                       styles.checkbox,
+                      { 
+                        width: Math.min(24, screenWidth * 0.06),
+                        height: Math.min(24, screenWidth * 0.06),
+                      },
                       selectedColleges.has(college.code as College) &&
                         styles.checkboxChecked,
                     ]}
                   ></View>
-                  <Text style={styles.checkboxLabel}>{college.label}</Text>
+                  <Text style={[styles.checkboxLabel, { fontSize: Math.min(16, screenWidth * 0.04) }]}>{college.label}</Text>
                 </TouchableOpacity>
               ))}
             </View>
           </View>
 
           {/* 제출 버튼 */}
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>
+          <TouchableOpacity 
+            style={[
+              styles.submitButton, 
+              { 
+                paddingVertical: Math.max(16, screenHeight * 0.02),
+                marginTop: Math.max(20, screenHeight * 0.025)
+              }
+            ]} 
+            onPress={handleSubmit}
+          >
+            <Text style={[styles.submitButtonText, { fontSize: Math.min(18, screenWidth * 0.045) }]}>
               {mode === "register" ? "회원가입" : "정보 수정"}
             </Text>
           </TouchableOpacity>
@@ -276,7 +291,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    maxWidth: 400,
     alignSelf: "center",
     width: "100%",
   },

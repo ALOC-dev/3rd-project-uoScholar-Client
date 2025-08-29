@@ -58,6 +58,7 @@ const SearchInputScreen = () => {
         {/* 🔍 검색창 */}
         <TextInput
           placeholder="검색어를 입력해주세요."
+          placeholderTextColor="#000000"
           style={styles.input}
           autoFocus
           onSubmitEditing={() => handleSend()}
@@ -123,6 +124,8 @@ const styles = StyleSheet.create({
   },
   popularContainer: {
     marginTop: 24,
+    width: "95%",
+    alignSelf: "center",
   },
   popularTitle: {
     fontSize: 16,
