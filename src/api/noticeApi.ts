@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { apiClient, handleApiError } from "./chatApi";
+import { apiClient } from "./chatApi";
 import { NoticeCategory } from '../types/college';
 
 export interface NoticeApiParams {
@@ -73,7 +73,7 @@ export const noticeApi = {
 
       return response.data;
     } catch (error) {
-      const errorMessage = handleApiError(error as AxiosError);
+      const errorMessage = (error as AxiosError).message;
       throw new Error(errorMessage);
     }
   },

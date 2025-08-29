@@ -1,5 +1,5 @@
 import { AxiosError, AxiosResponse } from "axios";
-import { apiClient, handleApiError } from "./chatApi";
+import { apiClient } from "./chatApi";
 
 export const keywordApi = {
     getKeywords: async (): Promise<string[]> => {
@@ -7,7 +7,7 @@ export const keywordApi = {
             const response: AxiosResponse<string[]> = await apiClient.get("/search/popular");
             return response.data;
         } catch (error) {
-            const errorMessage = handleApiError(error as AxiosError);
+            const errorMessage = (error as AxiosError).message;
             throw new Error(errorMessage);
         }
     },

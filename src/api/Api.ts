@@ -9,7 +9,6 @@ export {
   BASE_URL,
   DEFAULT_TIMEOUT,
   apiClient,
-  handleApiError,
 } from "./chatApi";
 
 // Re-export notice API and types
