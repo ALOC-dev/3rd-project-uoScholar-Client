@@ -25,9 +25,15 @@ const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const [chatList, setChatList] = useState<ChatMessage[]>([]);
   const [found, setFound] = useState<boolean>(false);
+  const [responseCount, setResponseCount] = useState<number>(0);
 
   const handleSendMessage = (newMessage: ChatMessage) => {
     setChatList((prev) => [...prev, newMessage]);
+    
+    // assistant 응답인 경우 카운트 증가
+    if (newMessage.role === "assistant") {
+      setResponseCount((prev) => prev + 1);
+    }
   };
 
   const handleFound = (foundValue: boolean) => {
@@ -37,7 +43,11 @@ const HomeScreen = () => {
   const handleRefreshChat = () => {
     setChatList([]);
     setFound(false);
+    setResponseCount(0); // 응답 카운트도 초기화
   };
+
+  // 새로고침 버튼 표시 조건: found가 true이거나 응답 카운트가 3회 이상
+  const shouldShowRefreshButton = found || responseCount >= 3;
 
   return (
     <View
@@ -66,7 +76,7 @@ const HomeScreen = () => {
         </View>
 
         {/* 대화 새로고침 버튼 */}
-        {found && (
+        {shouldShowRefreshButton && (
           <View style={styles.refreshContainer}>
             <TouchableOpacity style={styles.refreshButton} onPress={handleRefreshChat}>
               <Text style={styles.refreshText}>대화 새로고침 🔃</Text>
